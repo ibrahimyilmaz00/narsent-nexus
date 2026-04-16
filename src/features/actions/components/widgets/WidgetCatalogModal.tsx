@@ -24,7 +24,13 @@ import {
   Database,
   Info,
   ShieldCheck,
-  AlertOctagon
+  AlertOctagon,
+  Wallet,
+  Flag,
+  Crosshair,
+  Briefcase,
+  GitCompare,
+  Flame
 } from "lucide-react";
 import { useGlobalStore } from "../../../../store/useGlobalStore";
 
@@ -32,54 +38,76 @@ const MODULES = [
   { id: 'module1', name: 'Modül 1: Tahsilat Riski', icon: ShieldAlert },
   { id: 'module2', name: 'Modül 2: Nakit Akışı', icon: TrendingUp },
   { id: 'module3', name: 'Modül 3: Likidite Etkisi', icon: Activity },
+  { id: 'module4', name: 'Modül 4: İş Emirleri Analitiği', icon: Briefcase },
 ];
 
 const METRICS: Record<string, { id: string; name: string; icon: any }[]> = {
   'module1': [
     { id: 'risk_distribution', name: 'Risk Skoru Dağılımı', icon: Target },
     { id: 'bucket_breakdown', name: 'Geç Ödeme Olasılığı (Buckets)', icon: Clock },
-    { id: 'on_time_vs_late', name: 'Zamanında Ödeme vs Gecikme Oranı', icon: PieChart },
+    { id: 'on_time_vs_late_pct', name: 'Zamanında Ödeme vs Gecikme Oranı', icon: PieChart },
     { id: 'delay_gap', name: 'Vade Aşım Farkı (Delay Gap)', icon: AlertCircle },
-    { id: 'dtp_analysis', name: 'Tahmini Ödeme Günü (DTP) Analizi', icon: Activity },
+    { id: 'Predicted_DaysToPay', name: 'Tahmini Ödeme Günü (DTP) Analizi', icon: Activity },
     { id: 'top_late_accounts', name: 'En Çok Geciktiren Hesaplar (Top Late)', icon: TrendingDown },
     { id: 'top_risky_accounts', name: 'En Riskli Hesaplar (Top Risky)', icon: ShieldAlert },
-    { id: 'high_risk_volume', name: 'Yüksek Riskli Fatura Hacmi', icon: AlertTriangle },
-    { id: 'detailed_prob_curve', name: 'Detaylı Olasılık Eğrisi (0-60+ Gün)', icon: TrendingUp },
-    { id: 'avg_term_dist', name: 'Ortalama Vade (Days Term) Dağılımı', icon: Calendar },
-    { id: 'source_reliability', name: 'Veri Kaynağı Güvenilirliği (Source)', icon: Database },
-    { id: 'expected_payment_proj', name: 'Tahmini Ödeme Tarihi Projeksiyonu', icon: Clock },
+    { id: 'High_Risk_Count', name: 'Yüksek Riskli Fatura Hacmi', icon: AlertTriangle },
+    { id: 'PaymentProbability_distribution', name: 'Detaylı Olasılık Eğrisi (0-60+ Gün)', icon: TrendingUp },
+    { id: 'Days_Term', name: 'Ortalama Vade (Days Term) Dağılımı', icon: Calendar },
+    { id: 'tier_counts', name: 'Veri Kaynağı Güvenilirliği (Source)', icon: Database },
+    { id: 'Expected_Payment_Date', name: 'Tahmini Ödeme Tarihi Projeksiyonu', icon: Clock },
     { id: 'exposure_analysis_tl', name: 'Açık Tutar ve Vade Analizi (TL)', icon: DollarSign },
+    // client-side derived: AccountId + TransactionTotalAmount groupby
     { id: 'concentration_risk_new', name: 'Müşteri Yoğunlaşma Riski (Konsantrasyon)', icon: PieChart },
-    { id: 'xai_risk_factors', name: 'XAI Risk Faktörleri Analizi', icon: Target },
+    { id: 'xai_params', name: 'XAI Risk Faktörleri Analizi', icon: Target },
   ],
   'module2': [
-    { id: 'forecast_trend', name: '12 Haftalık Nakit Giriş Trendi', icon: TrendingUp },
-    { id: 'optimistic_vs_pessimistic', name: 'İyimser vs Kötümser Senaryo Eğrisi', icon: Activity },
+    { id: 'forecast', name: '12 Haftalık Nakit Giriş Trendi', icon: TrendingUp },
+    { id: 'forecast_interval', name: 'İyimser vs Kötümser Senaryo Eğrisi', icon: Activity },
     { id: 'horizon_aggregates', name: 'Vade Bazlı Projeksiyon (1H, 1A, 3A)', icon: BarChart2 },
     { id: 'total_forecast', name: 'Toplam Beklenen Nakit (12 Hf)', icon: DollarSign },
-    { id: 'historical_vs_future', name: 'Tarihsel Trend vs Gelecek Kıyaslaması', icon: Target },
-    { id: 'forecast_confidence', name: 'Tahmin Güven Skoru Analizi', icon: ShieldCheck },
-    { id: 'min_max_week', name: 'Dip ve Zirve Hafta Analizi', icon: Activity },
-    { id: 'variance_interval', name: 'Tahmin Sapma Aralığı (Varyans)', icon: Layers },
+    { id: 'historical_4w_comparison', name: 'Tarihsel Trend vs Gelecek Kıyaslaması', icon: Target },
+    { id: 'tier_confidence', name: 'Tahmin Güven Skoru Analizi', icon: ShieldCheck },
+    { id: 'weekly_min_max_forecast', name: 'Dip ve Zirve Hafta Analizi', icon: Activity },
+    { id: 'interval_width', name: 'Tahmin Sapma Aralığı (Varyans)', icon: Layers },
     { id: 'min_confidence', name: 'Model Kesinlik Sınırı (Min Confidence)', icon: Target },
-    { id: 'data_input_volume', name: 'İşlenen Fatura Hacmi (Data Input)', icon: Database },
+    { id: 'input_rows', name: 'İşlenen Fatura Hacmi (Data Input)', icon: Database },
   ],
   'module3': [
     { id: 'Net_Cash_Position', name: 'Ufuk Bazlı Net Nakit (W/1M/3M)', icon: DollarSign },
     { id: 'Cash_Deficit_Prob', name: 'Nakit Açığı İhtimali (Deficit Prob)', icon: Activity },
-    { id: 'monte_carlo_scenarios', name: 'Monte Carlo Nakit Senaryoları (P10-P90)', icon: Layers },
-    { id: 'expense_breakdown', name: 'Gider Kırılımı (OpEx vs COGS)', icon: PieChart },
-    { id: 'cash_at_risk', name: 'Riske Atılan Nakit (VaR - %95/%99)', icon: AlertOctagon },
-    { id: 'consolidated_risk_flag', name: 'Konsolide Risk Durum Bayrağı', icon: ShieldAlert },
-    { id: 'root_cause_analysis', name: 'Kök Neden Analizi (Root Cause)', icon: Target },
-    { id: 'ar_recovery_uplift', name: 'Tahsilat İyileşme Potansiyeli (AR Uplift)', icon: TrendingUp },
-    { id: 'macro_delay_shift', name: 'Makro Gecikme Etkisi (Delay Shift)', icon: Clock },
+    { id: 'Net_Cash_percentiles', name: 'Monte Carlo Nakit Senaryoları (P10-P90)', icon: Layers },
+    { id: 'Cash_Out_breakdown', name: 'Gider Kırılımı (OpEx vs COGS)', icon: PieChart },
+    { id: 'Cash_At_Risk', name: 'Riske Atılan Nakit (VaR - %95/%99)', icon: AlertOctagon },
+    { id: 'overall_risk_flag', name: 'Konsolide Risk Durum Bayrağı', icon: ShieldAlert },
+    { id: 'root_cause', name: 'Kök Neden Analizi (Root Cause)', icon: Target },
+    { id: 'AR_Recovery_Uplift', name: 'Tahsilat İyileşme Potansiyeli (AR Uplift)', icon: TrendingUp },
+    { id: 'delay_shift_factor', name: 'Makro Gecikme Etkisi (Delay Shift)', icon: Clock },
     { id: 'uncertainty_multiplier', name: 'Belirsizlik Çarpanı (Uncertainty)', icon: AlertCircle },
     { id: 'expense_timing', name: 'Gider Zamanlaması (Expense Timing)', icon: Calendar },
     { id: 'revenue_base_weekly', name: 'Haftalık Temel Gelir (Revenue Base)', icon: BarChart2 },
     { id: 'portfolio_risk_score', name: 'Portföy Risk Skoru Etkisi', icon: Users },
     { id: 'at_risk_amount', name: 'Tehlikedeki Toplam Tutar (At Risk)', icon: AlertTriangle },
-    { id: 'simulation_confidence', name: 'Simülasyon Güven Skoru', icon: ShieldCheck },
+    { id: 'Forecast_Confidence', name: 'Simülasyon Güven Skoru', icon: ShieldCheck },
+  ],
+  'module4': [
+    { id: 'm4_priority_tier', name: 'İş Emri Öncelik (Tier) Dağılımı', icon: Flame },
+    { id: 'm4_action_type', name: 'Aksiyon Tipi (Action Type) Dağılımı', icon: Activity },
+    { id: 'm4_weekly_cost', name: 'Hesap Bazı Haftalık İnaksiyon Maliyeti', icon: DollarSign },
+    { id: 'm4_exposure_vs_recovery', name: 'Açık Tutar vs Beklenen Kurtarım', icon: GitCompare },
+    { id: 'm4_risk_vs_delay', name: 'Hesap Risk Skoru ve Gecikme Analizi', icon: Crosshair },
+    { id: 'm4_invoice_count', name: 'İş Emri Fatura Yoğunluğu (Count)', icon: Database },
+    { id: 'm4_priority_raw', name: 'Ham Öncelik Skoru (Priority Raw) Sıralaması', icon: Layers },
+    { id: 'm4_recovery_rate', name: 'Hesap Bazı Kurtarma Oranı (%)', icon: TrendingUp },
+    { id: 'm4_total_exposure', name: 'Portföy Toplam Açık Pozisyonu', icon: Briefcase },
+    { id: 'm4_forecast_total', name: 'Tahmini Portföy Nakit Girişi (12H / Ort)', icon: LineChart },
+    { id: 'm4_weakest_strongest', name: 'En Zayıf vs En Güçlü Tahsilat Beklentisi', icon: GitCompare },
+    { id: 'm4_portfolio_risk', name: 'Portföy Ağırlıklı Risk ve Geç Ödeme (%)', icon: ShieldAlert },
+    { id: 'm4_net_cash_horizon', name: 'Portföy Net Nakit Ufku (Hafta/Ay/3Ay)', icon: Wallet },
+    { id: 'm4_confidence_urgency', name: 'Pipeline AI Güven Skoru ve Aciliyet', icon: ShieldCheck },
+    { id: 'm4_overall_flag', name: 'Genel Portföy Sağlık Bayrağı', icon: Flag },
+    { id: 'm4_scenario_recovery', name: 'Senaryo Bazı Beklenen Kurtarma (Kademeli vs Agresif)', icon: BarChart2 },
+    { id: 'm4_churn_risk', name: 'Senaryo Bazı Müşteri Kaybı (Churn) Riski', icon: Users },
+    { id: 'm4_discount_vs_legal', name: 'İskonto Maliyeti vs Hukuki İcra Maliyeti', icon: AlertTriangle },
   ]
 };
 
@@ -88,48 +116,68 @@ const CHART_COMPATIBILITY: Record<string, string[]> = {
   // --- MODÜL 1: TAHSİLAT RİSKİ (Eksiksiz JSON Şeması) ---
   'risk_distribution': ['Pie Chart', 'Bar Chart'],
   'bucket_breakdown': ['Pie Chart', 'Bar Chart'],
-  'on_time_vs_late': ['Pie Chart'],
+  'on_time_vs_late_pct': ['Pie Chart'],
   'delay_gap': ['KPI Card', 'Line Chart'],
-  'dtp_analysis': ['Bar Chart', 'Line Chart'],
+  'Predicted_DaysToPay': ['Bar Chart', 'Line Chart'],
   'top_late_accounts': ['Bar Chart'],
   'top_risky_accounts': ['Bar Chart', 'Radar Chart'],
-  'high_risk_volume': ['KPI Card', 'Bar Chart'],
-  'detailed_prob_curve': ['Line Chart', 'Area Chart'],
-  'avg_term_dist': ['Bar Chart'],
-  'source_reliability': ['Pie Chart'],
-  'expected_payment_proj': ['Line Chart'],
+  'High_Risk_Count': ['KPI Card', 'Bar Chart'],
+  'PaymentProbability_distribution': ['Line Chart', 'Area Chart'],
+  'Days_Term': ['Bar Chart'],
+  'tier_counts': ['Pie Chart'],
+  'Expected_Payment_Date': ['Line Chart'],
   'exposure_analysis_tl': ['Bar Chart', 'Line Chart'],
   'concentration_risk_new': ['Pie Chart', 'Bar Chart'],
-  'xai_risk_factors': ['Radar Chart', 'Bar Chart'],
+  'xai_params': ['Radar Chart', 'Bar Chart'],
 
   // --- MODÜL 2: NAKİT AKIŞI TAHMİNİ (Eksiksiz JSON Şeması) ---
-  'forecast_trend': ['Line Chart', 'Bar Chart'],
-  'optimistic_vs_pessimistic': ['Area Chart', 'Line Chart'],
+  'forecast': ['Line Chart', 'Bar Chart'],
+  'forecast_interval': ['Area Chart', 'Line Chart'],
   'horizon_aggregates': ['Bar Chart'],
   'total_forecast': ['KPI Card'],
-  'historical_vs_future': ['Bar Chart', 'KPI Card'],
-  'forecast_confidence': ['Line Chart', 'Radar Chart'],
-  'min_max_week': ['Bar Chart'],
-  'variance_interval': ['Bar Chart', 'KPI Card'],
+  'historical_4w_comparison': ['Bar Chart', 'KPI Card'],
+  'tier_confidence': ['Line Chart', 'Radar Chart'],
+  'weekly_min_max_forecast': ['Bar Chart'],
+  'interval_width': ['Bar Chart', 'KPI Card'],
   'min_confidence': ['KPI Card'],
-  'data_input_volume': ['KPI Card'],
+  'input_rows': ['KPI Card'],
 
   // --- MODÜL 3: LİKİDİTE ETKİSİ (Eksiksiz JSON Şeması) ---
   'Net_Cash_Position': ['Bar Chart', 'Line Chart'],
   'Cash_Deficit_Prob': ['Bar Chart', 'Pie Chart', 'KPI Card'],
-  'monte_carlo_scenarios': ['Area Chart', 'Line Chart'],
-  'expense_breakdown': ['Pie Chart', 'Bar Chart'],
-  'cash_at_risk': ['Bar Chart', 'KPI Card'],
-  'consolidated_risk_flag': ['KPI Card'],
-  'root_cause_analysis': ['Pie Chart', 'Bar Chart'],
-  'ar_recovery_uplift': ['Bar Chart', 'KPI Card'],
-  'macro_delay_shift': ['KPI Card', 'Line Chart'],
+  'Net_Cash_percentiles': ['Area Chart', 'Line Chart'],
+  'Cash_Out_breakdown': ['Pie Chart', 'Bar Chart'],
+  'Cash_At_Risk': ['Bar Chart', 'KPI Card'],
+  'overall_risk_flag': ['KPI Card'],
+  'root_cause': ['Pie Chart', 'Bar Chart'],
+  'AR_Recovery_Uplift': ['Bar Chart', 'KPI Card'],
+  'delay_shift_factor': ['KPI Card', 'Line Chart'],
   'uncertainty_multiplier': ['KPI Card', 'Radar Chart'],
   'expense_timing': ['Pie Chart'],
   'revenue_base_weekly': ['Line Chart', 'KPI Card'],
   'portfolio_risk_score': ['Radar Chart', 'Bar Chart'],
   'at_risk_amount': ['KPI Card', 'Bar Chart'],
-  'simulation_confidence': ['KPI Card']
+  'Forecast_Confidence': ['KPI Card'],
+
+  // --- MODÜL 4: İŞ EMİRLERİ ANALİTİĞİ VE STRATEJİ (Action Engine) ---
+  'm4_priority_tier': ['Pie Chart', 'Bar Chart'],
+  'm4_action_type': ['Bar Chart', 'Pie Chart'],
+  'm4_weekly_cost': ['Bar Chart', 'Line Chart'],
+  'm4_exposure_vs_recovery': ['Area Chart', 'Bar Chart'],
+  'm4_risk_vs_delay': ['Bar Chart'],
+  'm4_invoice_count': ['Pie Chart', 'Bar Chart'],
+  'm4_priority_raw': ['Bar Chart'],
+  'm4_recovery_rate': ['Line Chart', 'Bar Chart'],
+  'm4_total_exposure': ['KPI Card', 'Bar Chart'],
+  'm4_forecast_total': ['KPI Card', 'Line Chart'],
+  'm4_weakest_strongest': ['Bar Chart'],
+  'm4_portfolio_risk': ['Radar Chart', 'KPI Card'],
+  'm4_net_cash_horizon': ['Bar Chart', 'Area Chart'],
+  'm4_confidence_urgency': ['KPI Card', 'Radar Chart'],
+  'm4_overall_flag': ['KPI Card'],
+  'm4_scenario_recovery': ['Bar Chart', 'Area Chart'],
+  'm4_churn_risk': ['Line Chart', 'Bar Chart'],
+  'm4_discount_vs_legal': ['Pie Chart', 'Bar Chart'],
 };
 
 const CHART_TYPES = [
@@ -236,11 +284,15 @@ export default function WidgetCatalogModal() {
           <div className="p-6 flex flex-col gap-4 overflow-y-auto custom-scrollbar bg-zinc-950/50">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">2. Analiz Metriği</h3>
             
-            {(selectedModule === 'module2' || selectedModule === 'module3') && (
+            {(selectedModule === 'module2' || selectedModule === 'module3' || selectedModule === 'module4') && (
               <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-start gap-3">
                 <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                 <p className="text-xs text-blue-300/80 leading-relaxed">
-                  <strong className="text-blue-300 font-medium">Konsolide Veri:</strong> Bu modül tekil müşteri bazlı değil, şirketinizin genel finansal projeksiyonunu ve nakit akışını gösterir.
+                  {selectedModule === 'module4' ? (
+                    <><strong className="text-blue-300 font-medium">Action Engine:</strong> Bu modül, tüm iş emirleri ve stratejik senaryo verilerini (Horizon Action Engine JSON) analiz eder.</>  
+                  ) : (
+                    <><strong className="text-blue-300 font-medium">Konsolide Veri:</strong> Bu modül tekil müşteri bazında değil, şirketinizin genel finansal projeksiyonunu ve nakit akışını gösterir.</>
+                  )}
                 </p>
               </div>
             )}

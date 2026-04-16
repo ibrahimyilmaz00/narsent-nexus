@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type SegmentMode = 'genel' | 'b2b' | 'b2c';
-type ViewMode = 'dashboard' | 'actions' | 'account-profile';
+type ViewMode = 'dashboard' | 'actions' | 'account-profile' | 'kanban-archive';
 
 export interface WidgetData {
   id: string;
@@ -18,6 +18,8 @@ interface GlobalStore {
   setCurrentView: (view: ViewMode) => void;
   selectedAccountId: string | null;
   setSelectedAccountId: (id: string | null) => void;
+  selectedOrderStatus: string | null;
+  setSelectedOrderStatus: (status: string | null) => void;
   activeWidgets: WidgetData[];
   addWidget: (widget: WidgetData) => void;
   removeWidget: (id: string) => void;
@@ -25,6 +27,12 @@ interface GlobalStore {
   setWidgetModalOpen: (val: boolean) => void;
   isInvoiceModalOpen: boolean;
   setInvoiceModalOpen: (val: boolean) => void;
+  isWhatIfModalOpen: boolean;
+  setWhatIfModalOpen: (val: boolean) => void;
+  isActionModalOpen: boolean;
+  activeActionId: string | null;
+  openActionModal: (id: string) => void;
+  closeActionModal: () => void;
 }
 
 export const useGlobalStore = create<GlobalStore>((set) => ({
@@ -34,6 +42,8 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
   setCurrentView: (view) => set({ currentView: view }),
   selectedAccountId: null,
   setSelectedAccountId: (id) => set({ selectedAccountId: id }),
+  selectedOrderStatus: null,
+  setSelectedOrderStatus: (status) => set({ selectedOrderStatus: status }),
   activeWidgets: [],
   addWidget: (widget) => set((state) => ({ activeWidgets: [...state.activeWidgets, widget] })),
   removeWidget: (id) => set((state) => ({ activeWidgets: state.activeWidgets.filter((w) => w.id !== id) })),
@@ -41,4 +51,10 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
   setWidgetModalOpen: (val) => set({ isWidgetModalOpen: val }),
   isInvoiceModalOpen: false,
   setInvoiceModalOpen: (val) => set({ isInvoiceModalOpen: val }),
+  isWhatIfModalOpen: false,
+  setWhatIfModalOpen: (val) => set({ isWhatIfModalOpen: val }),
+  isActionModalOpen: false,
+  activeActionId: null,
+  openActionModal: (id) => set({ isActionModalOpen: true, activeActionId: id }),
+  closeActionModal: () => set({ isActionModalOpen: false, activeActionId: null }),
 }));

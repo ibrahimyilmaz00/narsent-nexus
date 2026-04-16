@@ -2,11 +2,14 @@
 
 import React from "react";
 import { Lightbulb, Activity, CheckCircle2, Circle, Clock, ShieldAlert, MessageSquare, Mail, Kanban } from "lucide-react";
+import { useGlobalStore } from "../../../store/useGlobalStore";
 
 export default function HorizonActionPanel() {
+  const openActionModal = useGlobalStore((state) => state.openActionModal);
+
   return (
     <div className="flex flex-col gap-6 w-full h-full">
-      
+
       {/* ═══════════════════════════════════════
          Acil Eylem Komutu
          ═══════════════════════════════════════ */}
@@ -64,7 +67,10 @@ export default function HorizonActionPanel() {
               <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
               <span className="text-sm font-semibold text-zinc-200">Görüşme Talep Et <span className="text-zinc-500 font-normal">(Bugün)</span></span>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors">
+            <button 
+              onClick={() => openActionModal('step_1')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+            >
               <MessageSquare size={14} className="text-blue-400" />
               Ekibe Bildir
             </button>
@@ -75,7 +81,10 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Yapılandırma Teklifi Sun <span className="text-zinc-600 font-normal">(48 Saat İçinde)</span></span>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors">
+            <button 
+              onClick={() => openActionModal('step_2')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+            >
               <Mail size={14} className="text-purple-400" />
               Taslak Oluştur
             </button>
@@ -86,7 +95,10 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Taahhüt Yoksa Limiti Düşür <span className="text-zinc-600 font-normal">(7. Gün)</span></span>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors">
+            <button 
+              onClick={() => openActionModal('step_3')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+            >
               <Kanban size={14} className="text-blue-500" />
               Task Aç
             </button>
@@ -97,7 +109,10 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Yanıt Alınamazsa Hukuki Takip <span className="text-zinc-600 font-normal">(21. Gün)</span></span>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors">
+            <button 
+              onClick={() => openActionModal('step_4')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+            >
               <Kanban size={14} className="text-blue-500" />
               Task Aç
             </button>
@@ -114,7 +129,7 @@ export default function HorizonActionPanel() {
           Eskalasyon Matrisi
         </h4>
         <div className="border-l-2 border-zinc-800 ml-3 pl-4 flex flex-col gap-6 relative">
-          
+
           {/* Timeline Node 1 */}
           <div className="relative">
             <div className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-zinc-600 outline outline-4 outline-zinc-950" />

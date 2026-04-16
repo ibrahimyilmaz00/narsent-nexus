@@ -99,22 +99,18 @@ export default function Sidebar() {
               >
                 Gelecek Aksiyonlar
               </button>
-              <button className="w-full text-left text-xs font-medium text-zinc-400 hover:text-zinc-200 py-1.5 transition-colors">
+              <button 
+                onClick={() => setCurrentView('kanban-archive')}
+                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${
+                  currentView === 'kanban-archive' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
+                }`}
+              >
                 Kanban İcra Arşivi
               </button>
             </div>
           </div>
         </div>
 
-        {/* Senaryo Analizi */}
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 font-medium transition-all duration-200 border border-transparent whitespace-nowrap">
-          <div className="flex items-center justify-center min-w-[20px]">
-            <GitBranch size={18} strokeWidth={2} />
-          </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
-            Senaryo (What-If)
-          </span>
-        </button>
 
         {/* Performans ve Analitik */}
         <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 font-medium transition-all duration-200 border border-transparent whitespace-nowrap">

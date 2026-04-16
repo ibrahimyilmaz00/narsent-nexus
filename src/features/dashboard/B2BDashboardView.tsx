@@ -12,6 +12,7 @@ import TopOffendersList from "./components/TopOffendersList";
 
 import ActionTable from "../actions/components/ActionTable";
 import AccountProfileView from "../actions/AccountProfileView";
+import KanbanArchiveView from "../actions/KanbanArchiveView";
 
 /* ═══════════════════════════════════════════════════════════
    B2B Dashboard View (Ana Kokpit & Actions Layout)
@@ -28,6 +29,8 @@ export default function B2BDashboardView() {
 
           {currentView === "account-profile" ? (
             <AccountProfileView />
+          ) : currentView === "kanban-archive" ? (
+            <KanbanArchiveView />
           ) : currentView === "actions" ? (
             /* ═══════════════════════════════════════
                Aksiyonlar / İş Emirleri Görünümü
