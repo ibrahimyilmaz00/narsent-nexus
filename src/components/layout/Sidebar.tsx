@@ -10,6 +10,7 @@ import {
   LogOut,
   ChevronDown,
   Hexagon,
+  Target,
 } from "lucide-react";
 import { useGlobalStore } from "../../store/useGlobalStore";
 
@@ -111,9 +112,32 @@ export default function Sidebar() {
           </div>
         </div>
 
+        {/* Horizon Strategy */}
+        <button
+          onClick={() => setCurrentView('horizon_strategy')}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
+            currentView === 'horizon_strategy'
+              ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+              : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
+          }`}
+        >
+          <div className="flex items-center justify-center min-w-[20px]">
+            <Target size={18} strokeWidth={2} />
+          </div>
+          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+            Horizon Strategy
+          </span>
+        </button>
 
         {/* Performans ve Analitik */}
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 font-medium transition-all duration-200 border border-transparent whitespace-nowrap">
+        <button 
+          onClick={() => setCurrentView('performance')}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
+            currentView === 'performance'
+              ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+              : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
+          }`}
+        >
           <div className="flex items-center justify-center min-w-[20px]">
             <LineChart size={18} strokeWidth={2} />
           </div>

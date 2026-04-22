@@ -34,10 +34,28 @@ const templates: Record<string, { subject: string; message: string }> = {
   }
 };
 
-export default function OmnichannelActionModal() {
-  const isActionModalOpen = useGlobalStore((state) => state.isActionModalOpen);
-  const activeActionId = useGlobalStore((state) => state.activeActionId);
+interface OmnichannelActionModalProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  accountId?: string;
+  accountName?: string;
+  exposure?: string;
+  aiInstruction?: string;
+}
+
+export default function OmnichannelActionModal({
+  isOpen,
+  onClose,
+  accountId,
+  accountName,
+  exposure,
+  aiInstruction
+}: OmnichannelActionModalProps = {}) {
+  const storeIsOpen = useGlobalStore((state) => state.isActionModalOpen);
+  const storeActiveActionId = useGlobalStore((state) => state.activeActionId);
   const closeActionModal = useGlobalStore((state) => state.closeActionModal);
+
+  const finalIsOpen = isOpen !== undefined ? isOpen : storeIsOpen;
 
   const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
   const [subject, setSubject] = useState("");
@@ -45,13 +63,21 @@ export default function OmnichannelActionModal() {
   const [isSent, setIsSent] = useState(false);
 
   useEffect(() => {
-    if (activeActionId && templates[activeActionId]) {
-      setSubject(templates[activeActionId].subject);
-      setMessage(templates[activeActionId].message);
+    if (aiInstruction) {
+      setSubject(`Aksiyon Planı: ${accountName || accountId || 'Hesap'}`);
+      const details = [
+        accountName ? `HESAP: ${accountName}` : null,
+        exposure ? `POZİSYON: ${exposure}` : null,
+        `\n📌 SİSTEM TALİMATI:\n${aiInstruction}`
+      ].filter(Boolean).join('\n');
+      setMessage(details);
+    } else if (storeActiveActionId && templates[storeActiveActionId]) {
+      setSubject(templates[storeActiveActionId].subject);
+      setMessage(templates[storeActiveActionId].message);
     }
-  }, [activeActionId]);
+  }, [storeActiveActionId, aiInstruction, accountId, accountName, exposure]);
 
-  if (!isActionModalOpen) return null;
+  if (!finalIsOpen) return null;
 
   const toggleChannel = (id: string) => {
     setSelectedChannels((prev) => 
@@ -68,7 +94,8 @@ export default function OmnichannelActionModal() {
     setSelectedChannels([]);
     setSubject("");
     setMessage("");
-    closeActionModal();
+    if (onClose) onClose();
+    else closeActionModal();
   };
 
   return (

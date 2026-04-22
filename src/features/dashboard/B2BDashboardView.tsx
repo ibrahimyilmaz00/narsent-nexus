@@ -2,7 +2,7 @@
 import { useGlobalStore } from "../../store/useGlobalStore";
 import Sidebar from "../../components/layout/Sidebar";
 
-import KPICards from "./components/KPICards"; 
+import KPICards from "./components/KPICards";
 import LiquidityChart from "./components/LiquidityChart";
 import RiskMatrixHeatmap from "./components/RiskMatrixHeatmap";
 import WaterfallChart from "./components/WaterfallChart";
@@ -13,7 +13,8 @@ import TopOffendersList from "./components/TopOffendersList";
 import ActionTable from "../actions/components/ActionTable";
 import AccountProfileView from "../actions/AccountProfileView";
 import KanbanArchiveView from "../actions/KanbanArchiveView";
-
+import { HorizonStrategyView } from "../strategy/HorizonStrategyView";
+import { PerformanceDashboard } from "../performance/components/PerformanceDashboard";
 /* ═══════════════════════════════════════════════════════════
    B2B Dashboard View (Ana Kokpit & Actions Layout)
    ═══════════════════════════════════════════════════════════ */
@@ -31,6 +32,8 @@ export default function B2BDashboardView() {
             <AccountProfileView />
           ) : currentView === "kanban-archive" ? (
             <KanbanArchiveView />
+          ) : currentView === "horizon_strategy" ? (
+            <HorizonStrategyView />
           ) : currentView === "actions" ? (
             /* ═══════════════════════════════════════
                Aksiyonlar / İş Emirleri Görünümü
@@ -50,6 +53,8 @@ export default function B2BDashboardView() {
                 <ActionTable />
               </div>
             </div>
+          ) : currentView === "performance" ? (
+            <PerformanceDashboard />
           ) : (
             /* ═══════════════════════════════════════
                Dashboard Görünümü
