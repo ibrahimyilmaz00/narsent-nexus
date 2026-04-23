@@ -2,29 +2,10 @@
 
 import React from "react";
 import { CalendarDays } from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════════
-   14-Day Calendar Mock Data
-   ═══════════════════════════════════════════════════════════ */
-const calendarDays = [
-  { day: "Pzt", date: "12", risk: false },
-  { day: "Sal", date: "13", risk: false },
-  { day: "Çar", date: "14", risk: false },
-  { day: "Per", date: "15", risk: true },  // Bottleneck
-  { day: "Cum", date: "16", risk: false },
-  { day: "Cmt", date: "17", risk: false, isWeekend: true },
-  { day: "Paz", date: "18", risk: false, isWeekend: true },
-  
-  { day: "Pzt", date: "19", risk: false },
-  { day: "Sal", date: "20", risk: true },  // Bottleneck
-  { day: "Çar", date: "21", risk: false },
-  { day: "Per", date: "22", risk: false },
-  { day: "Cum", date: "23", risk: true },  // Bottleneck
-  { day: "Cmt", date: "24", risk: false, isWeekend: true },
-  { day: "Paz", date: "25", risk: false, isWeekend: true },
-];
+import { useDashboardData } from "../../demo/useDashboardData";
 
 export default function LiquidityCalendar() {
+  const calendarDays = useDashboardData().charts.calendar;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}

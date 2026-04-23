@@ -8,31 +8,19 @@ import {
   ArrowUpRight,
   Info,
 } from "lucide-react";
+import type { KPICardData, KPIId } from "../../demo/demoTypes";
+import { useDashboardData } from "../../demo/useDashboardData";
 
-/* ═══════════════════════════════════════════════════════════
-   Types
-   ═══════════════════════════════════════════════════════════ */
-interface KPICardProps {
-  title: string;
-  value: string;
-  icon: React.ReactNode;
-  trend?: {
-    label: string;
-    type: "up" | "down" | "neutral";
-  };
-  subtext?: {
-    label: string;
-    color: "blue" | "orange" | "red" | "green";
-  };
-  badge?: {
-    label: string;
-  };
-}
+const ICONS: Record<KPIId, React.ReactNode> = {
+  cashForecast12w: <TrendingUp size={18} strokeWidth={1.5} />,
+  weeklyNetCash: <Droplets size={18} strokeWidth={1.5} />,
+  cashRunway: <Hourglass size={18} strokeWidth={1.5} />,
+  totalRecoverable: <Coins size={18} strokeWidth={1.5} />,
+};
 
-/* ═══════════════════════════════════════════════════════════
-   Single KPI Card
-   ═══════════════════════════════════════════════════════════ */
-function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
+function KPICard({ data }: { data: KPICardData }) {
+  const { title, value, trend, subtext, badge } = data;
+
   const subtextColors = {
     blue: "text-blue-400",
     orange: "text-orange-400",
@@ -55,14 +43,12 @@ function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
                  hover:border-zinc-700/80 hover:bg-zinc-900/60
                  hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]"
     >
-      {/* Subtle glow on hover */}
       <div
         className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full
                     bg-white/[0.03] blur-3xl transition-opacity duration-500
                     opacity-0 group-hover:opacity-100"
       />
 
-      {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-2.5">
           <div
@@ -70,7 +56,7 @@ function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
                         bg-white/[0.05] text-zinc-400 transition-colors duration-300
                         group-hover:text-zinc-200 group-hover:bg-white/[0.08]"
           >
-            {icon}
+            {ICONS[data.id]}
           </div>
           <span className="text-[13px] font-medium text-zinc-400 leading-tight">
             {title}
@@ -78,12 +64,10 @@ function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
         </div>
       </div>
 
-      {/* Value */}
       <p className="text-2xl sm:text-[28px] font-bold text-zinc-50 tracking-tight leading-none mb-3">
         {value}
       </p>
 
-      {/* Subtext Logic Wrapper */}
       <div className="mt-1 flex items-center gap-1.5 h-6">
         {trend && (
           <div className="flex items-center gap-1">
@@ -113,7 +97,6 @@ function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
           </div>
         )}
 
-        {/* Critical Badge Request: "🚨 Teşhis: Yüksek Sabit Gider" */}
         {badge && (
           <span
             className="inline-flex items-center gap-1.5 rounded-full
@@ -130,52 +113,13 @@ function KPICard({ title, value, icon, trend, subtext, badge }: KPICardProps) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   KPI Cards Grid (4 cards)
-   ═══════════════════════════════════════════════════════════ */
 export default function KPICards() {
-  const cards: KPICardProps[] = [
-    {
-      title: "12 Haftalık Nakit Tahmini",
-      value: "79.900.000 TL",
-      icon: <TrendingUp size={18} strokeWidth={1.5} />,
-      trend: {
-        label: "+%79.4 (ilk 4 haftaya göre)",
-        type: "up",
-      },
-    },
-    {
-      title: "Haftalık Net Nakit",
-      value: "290.200 TL",
-      icon: <Droplets size={18} strokeWidth={1.5} />,
-      subtext: {
-        label: "Likidite Durumu: Stabil",
-        color: "blue",
-      },
-    },
-    {
-      title: "Nakit Ömrü (Cash Runway)",
-      value: "12 Gün",
-      icon: <Hourglass size={18} strokeWidth={1.5} />,
-      badge: {
-        label: "🚨 Teşhis: Yüksek Sabit Gider",
-      },
-    },
-    {
-      title: "Toplam Kurtarılabilir",
-      value: "65.809.249 TL",
-      icon: <Coins size={18} strokeWidth={1.5} />,
-      subtext: {
-        label: "Geç Ödeme Oranı: %54.9",
-        color: "orange",
-      },
-    },
-  ];
+  const data = useDashboardData();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card, index) => (
-        <KPICard key={index} {...card} />
+      {data.kpis.map((kpi) => (
+        <KPICard key={kpi.id} data={kpi} />
       ))}
     </div>
   );

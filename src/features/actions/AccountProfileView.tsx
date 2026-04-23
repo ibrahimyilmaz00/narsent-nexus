@@ -3,6 +3,9 @@
 import React from "react";
 import { ArrowLeft, ShieldCheck, UserCheck, AlertTriangle, GitBranch } from "lucide-react";
 import { useGlobalStore } from "../../store/useGlobalStore";
+import { useDashboardData } from "../demo/useDashboardData";
+
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 import Module1AnalysisPanel from "./components/Module1AnalysisPanel";
 import Module3ImpactPanel from "./components/Module3ImpactPanel";
 import WidgetGrid from "./components/widgets/WidgetGrid";
@@ -25,6 +28,7 @@ export default function AccountProfileView() {
   const isWhatIfModalOpen = useGlobalStore((state) => state.isWhatIfModalOpen);
   const setWhatIfModalOpen = useGlobalStore((state) => state.setWhatIfModalOpen);
   const isActionModalOpen = useGlobalStore((state) => state.isActionModalOpen);
+  const profile = useDashboardData().accountProfile;
 
   const handleGoBack = () => {
     setSelectedAccountId(null);
@@ -59,10 +63,10 @@ export default function AccountProfileView() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 w-full">
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold text-zinc-50 tracking-tight">
-                Demirören Yapı A.Ş.
+                {profile.name}
               </h1>
               <p className="text-sm font-mono text-zinc-500 mt-1">
-                Hesap ID: 0095
+                Hesap ID: {profile.id}
               </p>
             </div>
 
@@ -76,15 +80,15 @@ export default function AccountProfileView() {
               )}
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
                 <ShieldCheck size={14} />
-                Düşük Risk: 0.241
+                {profile.riskBucket}: {profile.riskScore.toFixed(3)}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-1 text-xs font-bold text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
                 <AlertTriangle size={14} />
-                668 Gün Gecikme
+                {profile.delayDays} Gün Gecikme
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-xs font-bold text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.05)]">
                 <UserCheck size={14} />
-                Atanan Rol: Kıdemli Tahsilat Uzmanı
+                Atanan Rol: {profile.assignedRole}
               </span>
             </div>
           </div>
@@ -102,7 +106,7 @@ export default function AccountProfileView() {
             Açık Pozisyon (Exposure)
           </span>
           <span className="text-2xl sm:text-3xl font-bold text-zinc-50 tracking-tight">
-            18.666.794 TL
+            {formatTL(profile.exposure)}
           </span>
         </div>
 
@@ -112,7 +116,7 @@ export default function AccountProfileView() {
             Beklenen Kurtarım
           </span>
           <span className="text-2xl sm:text-3xl font-bold text-emerald-400 tracking-tight">
-            12.133.416 TL
+            {formatTL(profile.expectedRecovery)}
           </span>
         </div>
 
@@ -124,10 +128,10 @@ export default function AccountProfileView() {
               Haftalık İnaksiyon Maliyeti
             </span>
             <span className="text-2xl sm:text-3xl font-bold text-red-400 tracking-tight dropping-shadow block mt-2">
-              -93.334 TL
+              -{formatTL(profile.weeklyInactionCost)}
             </span>
             <span className="text-xs font-medium text-red-400/80 block mt-1">
-              90 günde 1.2M TL ek yük riski
+              90 günde {formatTL(profile.weeklyInactionCost * 13)} ek yük riski
             </span>
           </div>
           <button

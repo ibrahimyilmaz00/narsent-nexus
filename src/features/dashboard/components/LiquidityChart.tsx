@@ -12,24 +12,7 @@ import {
   Tooltip,
 } from "recharts";
 import { Info } from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════════
-   Mock Data for 12 Weeks (Values in Millions)
-   ═══════════════════════════════════════════════════════════ */
-const data = [
-  { name: "H1", expected: 80, range: [75, 85] },
-  { name: "H2", expected: 82, range: [76, 88] },
-  { name: "H3", expected: 81, range: [73, 89] },
-  { name: "H4", expected: 85, range: [74, 96] },
-  { name: "H5", expected: 83, range: [71, 95] },
-  { name: "H6", expected: 88, range: [75, 101] },
-  { name: "H7", expected: 86, range: [72, 100] },
-  { name: "H8", expected: 90, range: [75, 105] },
-  { name: "H9", expected: 89, range: [73, 105] },
-  { name: "H10", expected: 94, range: [77, 111] },
-  { name: "H11", expected: 92, range: [75, 109] },
-  { name: "H12", expected: 98, range: [78, 118] },
-];
+import { useDashboardData } from "../../demo/useDashboardData";
 
 /* Custom Tooltip */
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -67,6 +50,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function LiquidityChart() {
+  const data = useDashboardData().charts.liquidity;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}

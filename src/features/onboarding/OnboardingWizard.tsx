@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
 import { useGlobalStore } from "../../store/useGlobalStore";
+import { useDemoStore } from "../../store/useDemoStore";
 
 import { StepIndicator } from "./shared";
 import { Step1 } from "./steps/Step1";
@@ -11,12 +12,16 @@ import { Step3 } from "./steps/Step3";
 import { Step5 } from "./steps/Step5";
 import { sectorRegistry } from "./sectors";
 import { createOnboardingSession, completeOnboarding } from "./actions";
+import { generateDemoData, resolveUserInputs } from "../demo/generateDemoData";
 import type { ERPOption, SectorOption } from "./types";
 
 export default function OnboardingWizard() {
   const TOTAL_STEPS = 5;
   const [step, setStep] = useState(1);
   const setSegmentMode = useGlobalStore((state) => state.setSegmentMode);
+  const setDemoSector = useDemoStore((s) => s.setSelectedSector);
+  const setDemoInputs = useDemoStore((s) => s.setUserInputs);
+  const setDashboardData = useDemoStore((s) => s.setDashboardData);
 
   const [selectedERP, setSelectedERP] = useState<ERPOption>(null);
   const [selectedSector, setSelectedSector] = useState<SectorOption>(null);
@@ -32,6 +37,13 @@ export default function OnboardingWizard() {
   const handleLaunch = async () => {
     if (sessionId) {
       await completeOnboarding(sessionId, formValues);
+    }
+    if (selectedSector) {
+      const inputs = resolveUserInputs(selectedSector, formValues);
+      const data = generateDemoData(selectedSector, inputs);
+      setDemoSector(selectedSector);
+      setDemoInputs(inputs);
+      setDashboardData(data);
     }
     setSegmentMode("b2b");
   };

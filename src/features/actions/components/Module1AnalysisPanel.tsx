@@ -13,45 +13,9 @@ import {
 } from "recharts";
 import { FileText, BarChart3, AlertCircle, AlertTriangle } from "lucide-react";
 import { useGlobalStore } from "../../../store/useGlobalStore";
+import { useDashboardData } from "../../demo/useDashboardData";
 
-/* ═══════════════════════════════════════════════════════════
-   Mock Data
-   ═══════════════════════════════════════════════════════════ */
-const probabilityData = [
-  { name: "0-7 Gün", val: 5, color: "#10b981" },
-  { name: "8-15 Gün", val: 10, color: "#34d399" },
-  { name: "16-30 Gün", val: 15, color: "#fbbf24" },
-  { name: "31-60 Gün", val: 20, color: "#f97316" },
-  { name: "60+ Gün", val: 25, color: "#ef4444" },
-  { name: "Batık (Unpaid)", val: 25, color: "#7f1d1d" },
-];
-
-const invoicesData = [
-  {
-    id: "INV-2023-0891",
-    date: "10.05.2023",
-    amount: "6.200.000 TL",
-    daysDelay: "-668 Gün",
-    statusText: "Kritik Gecikme",
-    statusType: "critical", // red
-  },
-  {
-    id: "INV-2023-0942",
-    date: "21.06.2023",
-    amount: "5.466.794 TL",
-    daysDelay: "-626 Gün",
-    statusText: "Kritik Gecikme",
-    statusType: "critical", // red
-  },
-  {
-    id: "INV-2024-0105",
-    date: "15.01.2024",
-    amount: "7.000.000 TL",
-    daysDelay: "-419 Gün",
-    statusText: "Ağır Gecikme",
-    statusType: "severe", // orange
-  },
-];
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 
 /* ═══════════════════════════════════════════════════════════
    Custom Tooltip for Chart
@@ -76,6 +40,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
    ═══════════════════════════════════════════════════════════ */
 export default function Module1AnalysisPanel() {
   const setInvoiceModalOpen = useGlobalStore((state) => state.setInvoiceModalOpen);
+  const { probability: probabilityData, invoices: invoicesData } = useDashboardData().accountProfile.module1;
 
   return (
     <div className="flex flex-col gap-6 w-full h-full">
@@ -156,7 +121,7 @@ export default function Module1AnalysisPanel() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <span className="text-sm font-mono text-zinc-300 font-semibold">
-                      {invoice.amount}
+                      {formatTL(invoice.amount)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">

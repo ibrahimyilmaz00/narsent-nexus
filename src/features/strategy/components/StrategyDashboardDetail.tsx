@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import OmnichannelActionModal from '../../actions/components/OmnichannelActionModal';
-import { dashboardData } from '../data/mockData';
+import { useDashboardData } from '../../demo/useDashboardData';
+import type { StrategyAccount, StrategyStep } from '../../demo/demoTypes';
 import { Send, Target, Layers, Sparkles, X, ChevronDown, ChevronUp, ArrowLeft, Activity, AlertTriangle, TrendingUp, Wallet, PieChart, Scale, ShieldAlert, CheckCircle2, Circle, EyeOff, Play, Eye, CheckSquare, Square, Settings2, SlidersHorizontal, Cpu, Link, CalendarClock, LineChart, Zap, Flame, Users, FileStack, BrainCircuit, HeartHandshake, TrendingDown, Filter, LayoutGrid, Info, ListChecks } from 'lucide-react';
 import { BatchDeploymentModal } from './BatchDeploymentModal';
+
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 
 interface Props {
   reportId: string;
@@ -10,17 +13,16 @@ interface Props {
 }
 
 export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
+  const dashboardData = useDashboardData().strategy.detail;
   const [expandedAccount, setExpandedAccount] = useState<string | null>(null);
   const [drawerScenarioId, setDrawerScenarioId] = useState<number | null>(null);
   const [previewStepId, setPreviewStepId] = useState<string | null>(null);
 
-  // Hangi adımların (taskların) seçili olduğunu tutan state
-  const [checkedSteps, setCheckedSteps] = useState<string[]>(['0095-s1', '0095-s2', '0095-s3', '0095-s4', '0095-s5']);
+  const [checkedSteps, setCheckedSteps] = useState<string[]>([]);
 
-  // Modal yönetimi (Artık hesabın tamamı için değil, spesifik bir ADIM için açılacak)
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
-  const [selectedStepForAction, setSelectedStepForAction] = useState<any>(null);
-  const [activeAccountContext, setActiveAccountContext] = useState<any>(null); // Modala hesap bilgisini geçmek için
+  const [selectedStepForAction, setSelectedStepForAction] = useState<StrategyStep | null>(null);
+  const [activeAccountContext, setActiveAccountContext] = useState<StrategyAccount | null>(null);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
 
   const toggleStep = (stepId: string) => {
@@ -74,7 +76,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 <span className="text-xs font-medium text-zinc-400">Kompozit Risk Skoru</span>
                 <Activity size={16} className="text-amber-400" />
               </div>
-              <div className="text-2xl font-bold text-white mb-3">{dashboardData.metrics.portfolioRisk}</div>
+              <div className="text-2xl font-bold text-white mb-3">{dashboardData.metrics.portfolioRisk.toFixed(3)}</div>
               <div className="w-full bg-zinc-950 rounded-full h-1.5 border border-zinc-800/50">
                 <div className="bg-amber-400 h-1.5 rounded-full" style={{ width: `${dashboardData.metrics.portfolioRisk * 100}%` }}></div>
               </div>
@@ -101,12 +103,12 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
               </div>
               <div className="flex items-end gap-6 relative z-10">
                 <div>
-                  <div className="text-2xl font-bold text-white mb-1">{dashboardData.metrics.forecast12w}</div>
+                  <div className="text-2xl font-bold text-white mb-1">{formatTL(dashboardData.metrics.forecast12w)}</div>
                   <div className="text-[10px] text-zinc-500 uppercase tracking-widest">12 Haftalık Nakit Girişi</div>
                 </div>
                 <div className="h-10 w-px bg-zinc-800 hidden sm:block"></div>
                 <div className="hidden sm:block">
-                  <div className="text-lg font-bold text-zinc-400 mb-1">{dashboardData.metrics.totalExposure}</div>
+                  <div className="text-lg font-bold text-zinc-400 mb-1">{formatTL(dashboardData.metrics.totalExposure)}</div>
                   <div className="text-[10px] text-zinc-600 uppercase tracking-widest">Toplam Açık Risk</div>
                 </div>
               </div>
@@ -140,7 +142,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between items-center p-3 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
                     <span className="text-xs text-zinc-500 font-medium">Beklenen Kurtarım</span>
-                    <span className="text-sm font-bold text-emerald-400">{scenario.expected_recovery_tl}</span>
+                    <span className="text-sm font-bold text-emerald-400">{formatTL(scenario.expectedRecovery)}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
                     <span className="text-xs text-zinc-500 font-medium">Hedef Süre</span>
@@ -149,7 +151,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                   <div className="flex justify-between items-center p-3 bg-red-950/20 rounded-lg border border-red-900/30">
                     <span className="text-xs text-red-500/70 font-medium flex items-center gap-1"><ShieldAlert size={12} /> Müşteri Kaybı Riski</span>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-red-400">{scenario.client_loss_risk}</div>
+                      <div className="text-sm font-bold text-red-400">{scenario.clientLossRisk}</div>
                       <div className="text-[10px] text-zinc-500 mt-0.5">{scenario.cost}</div>
                     </div>
                   </div>
@@ -191,7 +193,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 <h4 className="text-sm font-bold text-red-400 uppercase tracking-widest">Haftalık İnaksiyon Maliyeti</h4>
               </div>
               <p className="text-xs text-red-300/70 mb-4 relative z-10">Sistemdeki önerilen aksiyonların alınmaması durumunda, portföyün her hafta uğradığı finansman yükü kaybı.</p>
-              <div className="text-3xl sm:text-4xl font-black text-red-400 mb-1 relative z-10">{dashboardData.impactAnalysis.inactionCostWeekly}</div>
+              <div className="text-3xl sm:text-4xl font-black text-red-400 mb-1 relative z-10">{formatTL(dashboardData.impactAnalysis.inactionCostWeekly)}</div>
               <div className="text-xs font-bold text-red-500 bg-red-950 px-2 py-1 rounded inline-block relative z-10 border border-red-900/50">Acil Müdahale Öneriliyor</div>
             </div>
 
@@ -200,7 +202,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-bold text-zinc-200 flex items-center gap-2"><Users size={16} className="text-blue-400" /> Departman İş Yükü Dağılımı</h4>
                 <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 bg-zinc-950 px-2 py-1 rounded border border-zinc-800">
-                  <FileStack size={12} className="text-indigo-400" /> {dashboardData.impactAnalysis.totalInvoicesAffected} Fatura
+                  <FileStack size={12} className="text-indigo-400" /> {dashboardData.impactAnalysis.totalInvoicesAffected.toLocaleString("tr-TR")} Fatura
                 </div>
               </div>
 
@@ -241,7 +243,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                   <div key={idx} className="relative">
                     <div className="flex justify-between items-end mb-2">
                       <span className="text-xs font-bold text-zinc-400 uppercase">{item.label}</span>
-                      <span className="text-lg font-black text-zinc-200">{item.value}</span>
+                      <span className="text-lg font-black text-zinc-200">{formatTL(item.value)}</span>
                     </div>
                     <div className="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
                       <div
@@ -274,23 +276,34 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 <span className="absolute -left-8 top-1/2 -rotate-90 text-[10px] font-bold text-zinc-600 uppercase tracking-tighter text-center">Açık Pozisyon (M)</span>
                 <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-zinc-600 uppercase tracking-tighter">Gecikme Süresi (Gün)</span>
 
-                {dashboardData.recoveryAnalysis.matrix.map((point) => (
-                  <div
-                    key={point.id}
-                    className={`absolute rounded-full border flex items-center justify-center text-[8px] font-black transition-all hover:scale-125 cursor-help ${point.risk > 0.4 ? 'bg-red-500/20 border-red-500/50 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.2)]' :
-                        point.risk > 0.3 ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' :
-                          'bg-blue-500/20 border-blue-500/50 text-blue-400'
-                      }`}
-                    style={{
-                      left: `${((point.x - 600) / 300) * 80 + 10}%`,
-                      bottom: `${((point.y - 8) / 12) * 80 + 10}%`,
-                      width: `${point.risk * 80}px`,
-                      height: `${point.risk * 80}px`
-                    }}
-                  >
-                    {point.label}
-                  </div>
-                ))}
+                {(() => {
+                  const pts = dashboardData.recoveryAnalysis.matrix;
+                  const xs = pts.map((p) => p.x);
+                  const ys = pts.map((p) => p.y);
+                  const xMin = Math.min(...xs);
+                  const xMax = Math.max(...xs);
+                  const yMin = Math.min(...ys);
+                  const yMax = Math.max(...ys);
+                  const xRange = xMax - xMin || 1;
+                  const yRange = yMax - yMin || 1;
+                  return pts.map((point) => (
+                    <div
+                      key={point.id}
+                      className={`absolute rounded-full border flex items-center justify-center text-[8px] font-black transition-all hover:scale-125 cursor-help ${point.risk > 0.4 ? 'bg-red-500/20 border-red-500/50 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.2)]' :
+                          point.risk > 0.3 ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' :
+                            'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                        }`}
+                      style={{
+                        left: `${((point.x - xMin) / xRange) * 75 + 10}%`,
+                        bottom: `${((point.y - yMin) / yRange) * 75 + 10}%`,
+                        width: `${point.risk * 80}px`,
+                        height: `${point.risk * 80}px`,
+                      }}
+                    >
+                      {point.label}
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
 
@@ -342,15 +355,15 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center bg-zinc-950/50 p-2.5 rounded-lg border border-zinc-800/50">
                   <span className="text-xs text-zinc-500 font-medium">Haftalık Beklenti</span>
-                  <span className="text-sm font-bold text-emerald-400">{dashboardData.pipelineDetails.cashFlow.weekly}</span>
+                  <span className="text-sm font-bold text-emerald-400">{formatTL(dashboardData.pipelineDetails.cashFlow.weekly)}</span>
                 </div>
                 <div className="flex justify-between items-center bg-zinc-950/50 p-2.5 rounded-lg border border-zinc-800/50">
                   <span className="text-xs text-zinc-500 font-medium">1 Aylık (M) Beklenti</span>
-                  <span className="text-sm font-bold text-emerald-400">{dashboardData.pipelineDetails.cashFlow.monthly}</span>
+                  <span className="text-sm font-bold text-emerald-400">{formatTL(dashboardData.pipelineDetails.cashFlow.monthly)}</span>
                 </div>
                 <div className="flex justify-between items-center bg-zinc-950/50 p-2.5 rounded-lg border border-zinc-800/50">
                   <span className="text-xs text-zinc-500 font-medium">3 Aylık (3M) Beklenti</span>
-                  <span className="text-sm font-bold text-emerald-400">{dashboardData.pipelineDetails.cashFlow.quarterly}</span>
+                  <span className="text-sm font-bold text-emerald-400">{formatTL(dashboardData.pipelineDetails.cashFlow.quarterly)}</span>
                 </div>
               </div>
             </div>
@@ -365,12 +378,12 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
               <div className="flex flex-col gap-4 h-[calc(100%-40px)] justify-center">
                 <div>
                   <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">En Zayıf Kurtarım Potansiyeli</div>
-                  <div className="text-xl font-bold text-red-400">{dashboardData.pipelineDetails.weakestLink}</div>
+                  <div className="text-xl font-bold text-red-400">{formatTL(dashboardData.pipelineDetails.weakestLink)}</div>
                 </div>
                 <div className="w-full h-px bg-zinc-800/50"></div>
                 <div>
                   <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">En Güçlü Kurtarım Potansiyeli</div>
-                  <div className="text-xl font-bold text-blue-400">{dashboardData.pipelineDetails.strongestLink}</div>
+                  <div className="text-xl font-bold text-blue-400">{formatTL(dashboardData.pipelineDetails.strongestLink)}</div>
                 </div>
               </div>
             </div>
@@ -442,11 +455,11 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                     <div className="flex items-center gap-5">
                       <div className="text-right hidden sm:block">
                         <div className="text-[10px] text-zinc-500 font-medium mb-0.5">Pozisyon</div>
-                        <div className="text-xs font-bold text-zinc-300">{account.exposure}</div>
+                        <div className="text-xs font-bold text-zinc-300">{formatTL(account.exposure)}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-[10px] text-emerald-500/70 font-medium mb-0.5">Kurtarım</div>
-                        <div className="text-xs font-bold text-emerald-400">{account.expectedRecovery}</div>
+                        <div className="text-xs font-bold text-emerald-400">{formatTL(account.expectedRecovery)}</div>
                       </div>
                       <div className="text-zinc-500">
                         {expandedAccount === account.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -490,7 +503,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                       {/* Görev Listesi (Mevcut kodun aynen kalacak) */}
                       <div className="space-y-2.5 mb-6">
-                        {account.steps?.map((step: any) => {
+                        {account.steps?.map((step: StrategyStep) => {
                           const isChecked = checkedSteps.includes(step.id);
                           const isPreviewOpen = previewStepId === step.id;
 
@@ -600,8 +613,8 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
             onClose={() => setIsActionModalOpen(false)}
             accountId={activeAccountContext.id}
             accountName={activeAccountContext.name}
-            exposure={activeAccountContext.exposure}
-            aiInstruction={selectedStepForAction.aiInstruction} // Hesabın genel talimatı değil, seçili adımın özel talimatı gidiyor!
+            exposure={formatTL(activeAccountContext.exposure)}
+            aiInstruction={selectedStepForAction.aiInstruction}
           />
         </div>
       )}

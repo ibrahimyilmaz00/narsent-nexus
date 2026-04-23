@@ -1,55 +1,17 @@
 import React, { useState } from 'react';
 import { Filter, X, Flame, CheckCircle, ArrowRight, ShieldAlert, AlertTriangle, Clock, FileText, Phone } from 'lucide-react';
 import { useGlobalStore } from '../../store/useGlobalStore';
+import { useDashboardData } from '../demo/useDashboardData';
+import type { KanbanOrder } from '../demo/demoTypes';
 
-const mockOrders = [
-  {
-    id: '0095',
-    company: 'Demirören Yapı A.Ş.',
-    exposure: '18.666.794 TL',
-    delay: '668 Gün',
-    risk: 'Düşük (0.241)',
-    action: 'Yapılandırma Teklifi Sunuldu',
-    status: 'Bekliyor',
-    filterCategory: 'bekleyen'
-  },
-  {
-    id: '0378',
-    company: 'Kalyon İnşaat',
-    exposure: '7.250.000 TL',
-    delay: '120 Gün',
-    risk: 'Orta (0.482)',
-    action: 'Müzakere Devam Ediyor',
-    status: 'İşlemde',
-    filterCategory: 'aktif'
-  },
-  {
-    id: '0412',
-    company: 'Tekfen Lojistik',
-    exposure: '3.400.000 TL',
-    delay: '45 Gün',
-    risk: 'Yüksek (0.812)',
-    action: '7. Gün Taahhüt İhlali',
-    status: 'SLA Aşımı',
-    filterCategory: 'zaman_asimi'
-  },
-  {
-    id: '0899',
-    company: 'Limak Enerji',
-    exposure: '12.100.000 TL',
-    delay: '890 Gün',
-    risk: 'Kritik (0.950)',
-    action: 'Yapılandırma Reddedildi',
-    status: 'Reddedildi / Hukuk',
-    filterCategory: 'riskli'
-  }
-];
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 
 export default function KanbanArchiveView() {
   const { setCurrentView, setSelectedAccountId, setSelectedOrderStatus } = useGlobalStore();
+  const mockOrders = useDashboardData().kanban;
   const [activeFilter, setActiveFilter] = useState('bekleyen');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<KanbanOrder | null>(null);
 
   const filteredOrders = activeFilter === 'tum'
     ? mockOrders
@@ -120,7 +82,7 @@ export default function KanbanArchiveView() {
                     {order.company}
                     <div className="text-xs text-zinc-500 font-normal mt-0.5">ID: {order.id}</div>
                   </td>
-                  <td className="px-6 py-4 text-zinc-300">{order.exposure}</td>
+                  <td className="px-6 py-4 text-zinc-300">{formatTL(order.exposure)}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2.5 py-1 rounded-md ${order.filterCategory === 'riskli' ? 'text-red-400 bg-red-400/10' : 'text-amber-400 bg-amber-400/10'}`}>
                       {order.delay}
@@ -183,7 +145,7 @@ export default function KanbanArchiveView() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl flex flex-col justify-center">
                   <span className="text-xs text-zinc-500 font-semibold mb-1 uppercase">Açık Pozisyon</span>
-                  <span className="text-2xl font-bold text-white">{selectedOrder.exposure}</span>
+                  <span className="text-2xl font-bold text-white">{formatTL(selectedOrder.exposure)}</span>
                 </div>
                 <div className="bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl flex flex-col justify-center">
                   <span className="text-xs text-zinc-500 font-semibold mb-1 uppercase">Risk Skoru</span>

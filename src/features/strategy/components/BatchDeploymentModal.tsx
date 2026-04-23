@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { ListChecks, X, Send, ShieldAlert, ArrowRight, ChevronDown, ChevronUp, Loader2, CheckCircle } from 'lucide-react';
-import { dashboardData } from '../data/mockData';
+import { useDashboardData } from '../../demo/useDashboardData';
+
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 
 interface BatchDeploymentModalProps {
   isOpen: boolean;
@@ -10,15 +12,16 @@ interface BatchDeploymentModalProps {
 }
 
 export const BatchDeploymentModal: React.FC<BatchDeploymentModalProps> = ({ isOpen, onClose, checkedSteps, onDeploy }) => {
+  const dashboardData = useDashboardData().strategy.detail;
   const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null); // YENİ: Sayacı tutacak referans
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   if (!isOpen) return null;
 
-  const affectedAccountIds = [...new Set(checkedSteps.map(id => id.split('-')[0]))];
-  const affectedAccounts = dashboardData.accounts.filter(acc => affectedAccountIds.includes(acc.id));
+  const affectedAccountIds = [...new Set(checkedSteps.map(id => id.split('-').slice(0, -1).join('-') || id))];
+  const affectedAccounts = dashboardData.accounts.filter((acc) => affectedAccountIds.includes(acc.id));
 
   const toggleExpand = (id: string) => {
     setExpandedStepId(prev => prev === id ? null : id);
@@ -143,7 +146,7 @@ export const BatchDeploymentModal: React.FC<BatchDeploymentModalProps> = ({ isOp
                         </div>
                         <h4 className="text-sm font-bold text-zinc-200">Hesap {account.id} ({account.name})</h4>
                       </div>
-                      <div className="text-xs font-bold text-zinc-500 hidden sm:block">{account.exposure} Risk</div>
+                      <div className="text-xs font-bold text-zinc-500 hidden sm:block">{formatTL(account.exposure)} Risk</div>
                     </div>
                     
                     <ul className="space-y-2.5">

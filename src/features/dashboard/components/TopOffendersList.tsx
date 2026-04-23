@@ -2,19 +2,12 @@
 
 import React from "react";
 import { AlertCircle } from "lucide-react";
+import { useDashboardData } from "../../demo/useDashboardData";
 
-/* ═══════════════════════════════════════════════════════════
-   Top Offenders Mock Data
-   ═══════════════════════════════════════════════════════════ */
-const offenders = [
-  { id: 1, name: "Demirören Yapı A.Ş.", score: 92, amount: "4.250.000 TL" },
-  { id: 2, name: "Global Tekstil Sanayi", score: 88, amount: "2.100.000 TL" },
-  { id: 3, name: "Apex Lojistik Ltd.", score: 85, amount: "1.850.000 TL" },
-  { id: 4, name: "Mega Gıda Dağıtım", score: 79, amount: "940.000 TL" },
-  { id: 5, name: "Çelik Motor A.Ş.", score: 76, amount: "820.000 TL" },
-];
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
 
 export default function TopOffendersList() {
+  const offenders = useDashboardData().topOffenders;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
@@ -48,7 +41,7 @@ export default function TopOffendersList() {
             
             <div className="flex items-center gap-4 text-right">
               <span className="text-xs font-mono font-medium text-zinc-400">
-                {offender.amount}
+                {formatTL(offender.amount)}
               </span>
               <div className="flex items-center justify-center rounded bg-red-500/10 px-1.5 py-0.5 border border-red-500/20 min-w-[48px]">
                 <span className="text-[10px] font-bold text-red-400">

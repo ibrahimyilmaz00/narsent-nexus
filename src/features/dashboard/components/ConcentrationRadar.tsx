@@ -11,17 +11,10 @@ import {
   Tooltip,
 } from "recharts";
 import { PieChart } from "lucide-react";
-
-const data = [
-  { name: "Tekstil", value: 120, fullMark: 150 },
-  { name: "İnşaat", value: 98, fullMark: 150 },
-  { name: "Enerji", value: 45, fullMark: 150 },
-  { name: "Perakende", value: 110, fullMark: 150 },
-  { name: "Otomotiv", value: 85, fullMark: 150 },
-  { name: "Bilişim", value: 65, fullMark: 150 },
-];
+import { useDashboardData } from "../../demo/useDashboardData";
 
 export default function ConcentrationRadar() {
+  const data = useDashboardData().charts.concentration;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}

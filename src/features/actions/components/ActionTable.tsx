@@ -1,56 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Filter, ArrowRight } from "lucide-react";
 import ActionDrawer, { ActionItemData } from "./ActionDrawer";
+import { useDashboardData } from "../../demo/useDashboardData";
+import type { WorkOrder } from "../../demo/demoTypes";
 
-/* ═══════════════════════════════════════════════════════════
-   Mock Data
-   ═══════════════════════════════════════════════════════════ */
 type Urgency = "KRİTİK" | "YÜKSEK" | "ORTA";
 
-const mockActions: ActionItemData[] = [
-  {
-    id: "a1",
-    customerName: "Demirören Yapı A.Ş.",
-    urgency: "KRİTİK",
-    amount: "4.250.000 TL",
-    costOfInaction: "Aylık -150.000 TL",
-    aiSuggestion: "Vadeyi 15 gün kısalt, ek teminat mektubu iste.",
-  },
-  {
-    id: "a2",
-    customerName: "Global Tekstil Sanayi",
-    urgency: "KRİTİK",
-    amount: "2.100.000 TL",
-    costOfInaction: "Haftalık -93.334 TL",
-    aiSuggestion: "Açık hesabı kapat, DBS (Doğrudan Borçlandırma) zorunlu tut.",
-  },
-  {
-    id: "a3",
-    customerName: "Apex Lojistik Ltd.",
-    urgency: "YÜKSEK",
-    amount: "1.850.000 TL",
-    costOfInaction: "Aylık -45.000 TL",
-    aiSuggestion: "Limitleri %20 daralt, gecikme faizlerini işlet.",
-  },
-  {
-    id: "a4",
-    customerName: "TeknoMart Mağazacılık",
-    urgency: "ORTA",
-    amount: "1.200.000 TL",
-    costOfInaction: "Aylık -12.500 TL",
-    aiSuggestion: "Dinamik iskonto teklif et, peşin ödemeye teşvik et.",
-  },
-  {
-    id: "a5",
-    customerName: "Mega Gıda Dağıtım",
-    urgency: "ORTA",
-    amount: "940.000 TL",
-    costOfInaction: "Aylık -9.000 TL",
-    aiSuggestion: "Standart izleme, risk puanı hafif artış gösterdi.",
-  },
-];
+const formatTL = (n: number) => `${Math.round(n).toLocaleString("tr-TR")} TL`;
+
+const toActionItem = (w: WorkOrder): ActionItemData => ({
+  id: w.id,
+  customerName: w.customerName,
+  urgency: w.urgency,
+  amount: formatTL(w.amount),
+  costOfInaction: `Aylık -${formatTL(w.costOfInactionMonthly)}`,
+  aiSuggestion: w.aiSuggestion,
+});
 
 /* ═══════════════════════════════════════════════════════════
    Badge Helpers
@@ -87,6 +54,8 @@ const renderUrgencyBadge = (urgency: Urgency) => {
    Component
    ═══════════════════════════════════════════════════════════ */
 export default function ActionTable() {
+  const workOrders = useDashboardData().workOrders;
+  const mockActions = useMemo(() => workOrders.map(toActionItem), [workOrders]);
   const [activeTab, setActiveTab] = useState<"risks" | "opportunities">("risks");
   const [selectedAction, setSelectedAction] = useState<ActionItemData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -12,19 +12,7 @@ import {
   Cell,
 } from "recharts";
 import { Activity } from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════════
-   Waterfall Data (Floating Bars approach)
-   Value array: [bottom, top]
-   ═══════════════════════════════════════════════════════════ */
-const data = [
-  { name: "Başlangıç", value: [0, 500], isTotal: true },
-  { name: "Tahsilatlar", value: [500, 750] },
-  { name: "Yeni Satış", value: [750, 900] },
-  { name: "Sabit Gider", value: [900, 700] },
-  { name: "Vergi / Kredi", value: [700, 550] },
-  { name: "Beklenen Kapanış", value: [0, 550], isTotal: true },
-];
+import { useDashboardData } from "../../demo/useDashboardData";
 
 /* Custom Tooltip */
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -54,6 +42,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function WaterfallChart() {
+  const data = useDashboardData().charts.waterfall;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
