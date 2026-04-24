@@ -13,6 +13,11 @@ const buildFallback = (): DashboardData => {
     musteri: t.baselineMusteri,
     pesin: t.baselinePesin,
     risk: t.baselineRisk,
+    tedarikci: 20,
+    stok: 5_000_000,
+    stokDevir: 60,
+    dpo: 45,
+    faturaSayisi: 320,
   });
 };
 

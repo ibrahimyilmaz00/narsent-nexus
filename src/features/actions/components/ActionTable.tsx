@@ -126,10 +126,10 @@ export default function ActionTable() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {mockActions.map((action) => (
+              {mockActions.map((action, index) => (
                 <tr
                   key={action.id}
-                  className="group hover:bg-zinc-800/30 transition-colors cursor-default"
+                  className={`group transition-colors cursor-default ${index === 0 ? 'hover:bg-zinc-800/30' : 'opacity-50 blur-[3px] pointer-events-none select-none'}`}
                 >
                   <td className="px-5 py-4">
                     <span className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
@@ -157,7 +157,7 @@ export default function ActionTable() {
                   <td className="px-5 py-4 text-right">
                     <button
                       onClick={() => handleOpenDrawer(action)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 border border-transparent hover:border-blue-500/20 transition-all opacity-0 group-hover:opacity-100"
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 border border-transparent hover:border-blue-500/20 transition-all ${index === 0 ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`}
                     >
                       İncele
                       <ArrowRight size={14} />

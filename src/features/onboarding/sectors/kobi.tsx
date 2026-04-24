@@ -28,6 +28,9 @@ import {
 
 import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
+import { num, fmtTL, clamp } from "./insightHelpers";
+
+/* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
   <div className="space-y-6">
@@ -117,32 +120,47 @@ export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
   </div>
 );
 
-export const step3: Step3Data = {
-  title: "Narsent ERP Analizi",
-  subtitle:
-    "ERP verilerinizden otomatik olarak hesaplanan mevcut durum tespiti. Bu veriler salt okunurdur.",
-  badge: "ERP Verisi",
-  findings: [
-    {
-      label: "Müşteri Yoğunlaşma Riski",
-      value: "%40",
-      detail: "Cironun %40'ı sadece 2 müşteriden geliyor",
-      icon: <AlertTriangle size={18} strokeWidth={1.5} />,
-    },
-    {
-      label: "Gerçekleşen Ortalama Gecikme",
-      value: "+18 Gün",
-      detail: "Sözleşme vadesinin ortalama 18 gün üzerinde tahsilat",
-      icon: <Clock size={18} strokeWidth={1.5} />,
-    },
-    {
-      label: "Vadesi Geçmiş Tahsil Edilemeyen Alacak",
-      value: "1.250.000 TL",
-      detail: "90 günü aşmış tahsil edilememiş toplam alacak",
-      icon: <ShieldAlert size={18} strokeWidth={1.5} />,
-    },
-  ],
-};
+/* ── Step 3 — dynamic insights from Step 2 inputs ──────────────── */
+
+export function computeStep3(values: Record<string, string>): Step3Data {
+  const ciro = num(values, "ciro", 60_000_000);
+  const musteriSayisi = num(values, "musteriSayisi", 85);
+  const vade = num(values, "vade", 60);
+  const pesinOran = num(values, "pesinOran", 30);
+
+  const yogunlasma = clamp(Math.round(5000 / (musteriSayisi * (pesinOran / 100 + 0.5))), 10, 65);
+  const gecikme = clamp(Math.round(vade * 0.3), 5, 45);
+  const vadesGecmis = ciro * (1 - pesinOran / 100) * 0.08;
+
+  return {
+    title: "Narsent ERP Analizi",
+    subtitle:
+      "ERP verilerinizden otomatik olarak hesaplanan mevcut durum tespiti. Bu veriler salt okunurdur.",
+    badge: "ERP Verisi",
+    findings: [
+      {
+        label: "Müşteri Yoğunlaşma Riski",
+        value: `%${yogunlasma}`,
+        detail: `Cironun %${yogunlasma}'${yogunlasma > 10 ? "ı" : "i"} az sayıda müşteride toplanmış`,
+        icon: <AlertTriangle size={18} strokeWidth={1.5} />,
+      },
+      {
+        label: "Gerçekleşen Ortalama Gecikme",
+        value: `+${gecikme} Gün`,
+        detail: `Sözleşme vadesinin ortalama ${gecikme} gün üzerinde tahsilat`,
+        icon: <Clock size={18} strokeWidth={1.5} />,
+      },
+      {
+        label: "Vadesi Geçmiş Tahsil Edilemeyen Alacak",
+        value: fmtTL(vadesGecmis),
+        detail: "90 günü aşmış tahsil edilememiş toplam alacak",
+        icon: <ShieldAlert size={18} strokeWidth={1.5} />,
+      },
+    ],
+  };
+}
+
+/* ── Step 4 ─────────────────────────────────────────────────────── */
 
 export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
   <div className="space-y-6">
@@ -245,58 +263,73 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
   </div>
 );
 
-export const Step5Dashboard: React.FC = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div className="rounded-2xl border border-red-500/25 bg-red-950/20 p-6 space-y-4 flex flex-col">
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/15">
-          <ShieldAlert size={16} className="text-red-400" strokeWidth={2} />
-        </div>
-        <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-red-400">
-          Tespit Edilen Nakit Açığı Sinyali
-        </span>
-      </div>
-      <div className="flex-1 space-y-3">
-        <p className="text-[15px] font-semibold text-red-300 leading-relaxed">
-          Gelecek Ay Maaş Ödemelerinde
-        </p>
-        <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
-          120.000 TL
-        </p>
-        <p className="text-sm text-red-300/80 leading-relaxed">
-          Açık Riski Tespit Edildi
-        </p>
-      </div>
-      <div className="flex items-center gap-1.5 pt-1">
-        <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-        <span className="text-[11px] text-red-400/70 font-medium">Kritik Uyarı</span>
-      </div>
-    </div>
+/* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-    <div className="rounded-2xl border border-blue-500/25 bg-blue-950/15 p-6 space-y-4 flex flex-col">
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/15">
-          <Brain size={16} className="text-blue-400" strokeWidth={2} />
+export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+  const opex = num(values, "opex", 850_000);
+  const krediOdeme = num(values, "krediOdeme", 120_000);
+  const nakit = num(values, "nakit", 600_000);
+  const vade = num(values, "vade", 60);
+  const musteriSayisi = num(values, "musteriSayisi", 85);
+  const faturaSayisi = num(values, "faturaSayisi", 320);
+
+  const nakitAcigi = Math.max(opex + krediOdeme - nakit * 0.5, opex * 0.1);
+  const dsoKisaltma = clamp(Math.round(vade * 0.25), 5, 30);
+  const aiIsabet = clamp(Math.round(70 + musteriSayisi * 0.1 + faturaSayisi * 0.02), 75, 95);
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="rounded-2xl border border-red-500/25 bg-red-950/20 p-6 space-y-4 flex flex-col">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/15">
+            <ShieldAlert size={16} className="text-red-400" strokeWidth={2} />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-red-400">
+            Tespit Edilen Nakit Açığı Sinyali
+          </span>
         </div>
-        <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-blue-400">
-          Horizon AI Hedefi
-        </span>
+        <div className="flex-1 space-y-3">
+          <p className="text-[15px] font-semibold text-red-300 leading-relaxed">
+            Gelecek Ay Maaş Ödemelerinde
+          </p>
+          <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
+            {fmtTL(nakitAcigi)}
+          </p>
+          <p className="text-sm text-red-300/80 leading-relaxed">
+            Açık Riski Tespit Edildi
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 pt-1">
+          <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+          <span className="text-[11px] text-red-400/70 font-medium">Kritik Uyarı</span>
+        </div>
       </div>
-      <div className="flex-1 space-y-3">
-        <p className="text-[15px] font-semibold text-blue-200 leading-relaxed">
-          DSO&apos;yu 15 gün öne çekmek
-        </p>
-        <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-          %85 İsabet
-        </p>
-        <p className="text-sm text-blue-300/80 leading-relaxed">
-          ile riski tahmin etmek
-        </p>
-      </div>
-      <div className="flex items-center gap-1.5 pt-1">
-        <div className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
-        <span className="text-[11px] text-blue-400/70 font-medium">AI Motorları Hazır</span>
+
+      <div className="rounded-2xl border border-blue-500/25 bg-blue-950/15 p-6 space-y-4 flex flex-col">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/15">
+            <Brain size={16} className="text-blue-400" strokeWidth={2} />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-blue-400">
+            Horizon AI Hedefi
+          </span>
+        </div>
+        <div className="flex-1 space-y-3">
+          <p className="text-[15px] font-semibold text-blue-200 leading-relaxed">
+            DSO&apos;yu {dsoKisaltma} gün öne çekmek
+          </p>
+          <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
+            %{aiIsabet} İsabet
+          </p>
+          <p className="text-sm text-blue-300/80 leading-relaxed">
+            ile riski tahmin etmek
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 pt-1">
+          <div className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-[11px] text-blue-400/70 font-medium">AI Motorları Hazır</span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};

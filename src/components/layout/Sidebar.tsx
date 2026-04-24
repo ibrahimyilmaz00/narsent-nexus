@@ -101,8 +101,9 @@ export default function Sidebar() {
                 Gelecek Aksiyonlar
               </button>
               <button 
+                disabled
                 onClick={() => setCurrentView('kanban-archive')}
-                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${
+                className={`w-full text-left text-xs font-medium py-1.5 transition-colors opacity-50 blur-[1px] cursor-not-allowed pointer-events-none ${
                   currentView === 'kanban-archive' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
@@ -131,8 +132,9 @@ export default function Sidebar() {
 
         {/* Performans ve Analitik */}
         <button 
+          disabled
           onClick={() => setCurrentView('performance')}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap opacity-50 blur-[2px] cursor-not-allowed pointer-events-none ${
             currentView === 'performance'
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"

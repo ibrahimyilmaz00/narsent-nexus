@@ -285,5 +285,11 @@ export interface DemoUserInputs {
   musteri: number;
   pesin: number;
   risk: number;
+  /* New normalized fields — previously-unused sector inputs */
+  tedarikci: number;
+  stok: number;
+  stokDevir: number;
+  dpo: number;
+  faturaSayisi: number;
   [key: string]: string | number;
 }

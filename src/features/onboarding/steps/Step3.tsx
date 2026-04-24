@@ -6,8 +6,15 @@ import { BarChart3 } from "lucide-react";
 import { sectorRegistry } from "../sectors";
 import type { SectorKey } from "../types";
 
-export function Step3({ sector }: { sector: SectorKey }) {
-  const { title, subtitle, badge, findings } = sectorRegistry[sector].step3;
+export function Step3({
+  sector,
+  values,
+}: {
+  sector: SectorKey;
+  values: Record<string, string>;
+}) {
+  const { title, subtitle, badge, findings } =
+    sectorRegistry[sector].computeStep3(values);
 
   return (
     <div className="space-y-8">

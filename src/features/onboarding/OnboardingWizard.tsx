@@ -104,12 +104,12 @@ export default function OnboardingWizard() {
           {step === 2 && sectorModule && (
             <sectorModule.Step2 values={formValues} onChange={handleFormChange} />
           )}
-          {step === 3 && selectedSector && <Step3 sector={selectedSector} />}
+          {step === 3 && selectedSector && <Step3 sector={selectedSector} values={formValues} />}
           {step === 4 && sectorModule && (
             <sectorModule.Step4 values={formValues} onChange={handleFormChange} />
           )}
           {step === 5 && selectedSector && (
-            <Step5 sector={selectedSector} onLaunch={handleLaunch} />
+            <Step5 sector={selectedSector} values={formValues} onLaunch={handleLaunch} />
           )}
         </div>
 

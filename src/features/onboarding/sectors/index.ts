@@ -9,31 +9,31 @@ import type { SectorKey, SectorModule } from "../types";
 export const sectorRegistry: Record<SectorKey, SectorModule> = {
   kobi: {
     Step2: kobi.Step2,
-    step3: kobi.step3,
+    computeStep3: kobi.computeStep3,
     Step4: kobi.Step4,
     Step5Dashboard: kobi.Step5Dashboard,
   },
   kurumsal: {
     Step2: kurumsal.Step2,
-    step3: kurumsal.step3,
+    computeStep3: kurumsal.computeStep3,
     Step4: kurumsal.Step4,
     Step5Dashboard: kurumsal.Step5Dashboard,
   },
   enerji: {
     Step2: enerji.Step2,
-    step3: enerji.step3,
+    computeStep3: enerji.computeStep3,
     Step4: enerji.Step4,
     Step5Dashboard: enerji.Step5Dashboard,
   },
   telekom: {
     Step2: telekom.Step2,
-    step3: telekom.step3,
+    computeStep3: telekom.computeStep3,
     Step4: telekom.Step4,
     Step5Dashboard: telekom.Step5Dashboard,
   },
   egitim: {
     Step2: egitim.Step2,
-    step3: egitim.step3,
+    computeStep3: egitim.computeStep3,
     Step4: egitim.Step4,
     Step5Dashboard: egitim.Step5Dashboard,
   },

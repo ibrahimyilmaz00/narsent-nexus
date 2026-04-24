@@ -23,11 +23,11 @@ export const StrategyRunsList = ({ onSelectReport }: Props) => {
         </div>
       </div>
       <div className="space-y-4">
-        {pipelineRuns.map((run) => (
+        {pipelineRuns.map((run, index) => (
           <div
             key={run.id}
-            onClick={() => onSelectReport(run.id)}
-            className={`group flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all hover:scale-[1.01] ${run.isLatest ? 'bg-blue-900/10 border-blue-500/30 hover:bg-blue-900/20' : 'bg-zinc-900/30 border-zinc-800 hover:bg-zinc-900/50 hover:border-zinc-700'}`}
+            onClick={() => index === 0 && onSelectReport(run.id)}
+            className={`group flex items-center justify-between p-5 rounded-2xl border transition-all ${index === 0 ? (run.isLatest ? 'bg-blue-900/10 border-blue-500/30 hover:bg-blue-900/20 cursor-pointer hover:scale-[1.01]' : 'bg-zinc-900/30 border-zinc-800 hover:bg-zinc-900/50 hover:border-zinc-700 cursor-pointer hover:scale-[1.01]') : 'opacity-50 blur-[3px] pointer-events-none select-none bg-zinc-900/30 border-zinc-800'}`}
           >
             <div className="flex items-center gap-5">
               <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${run.status === 'GREEN' ? 'bg-emerald-500/20 text-emerald-400' : run.status === 'YELLOW' ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'}`}><Activity size={20} /></div>

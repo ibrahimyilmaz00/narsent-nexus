@@ -15,24 +15,7 @@ const CHANNELS = [
   { id: "sms", label: "SMS", icon: Smartphone },
 ];
 
-const templates: Record<string, { subject: string; message: string }> = {
-  step_1: {
-    subject: "İVEDİ: Hesap 0095 (Demirören) - 18.6M TL Yapılandırma Görüşmesi",
-    message: "HESAP: 0095 (Demirören Yapı A.Ş.)\nAÇIK POZİSYON: 18.666.794 TL\nGECİKME: 668 Gün\n\n📌 ACİL AKSİYON (BUGÜN):\nHesap 0095 yöneticisini BUGÜN ara; acil görüşme talep et ve 3 taksitli yapılandırma (0 faiz, 30-60-90 gün) teklifini sun.\n\n⚠️ FİNANSAL RİSK:\nHer hafta hareketsiz geçen süre 93.334 TL finansman maliyeti yaratıyor."
-  },
-  step_2: {
-    subject: "RESMİ TEKLİF: Hesap 0095 - 3 Taksitli Yapılandırma Protokolü",
-    message: "HESAP: 0095 (Demirören Yapı A.Ş.)\n\n📌 AKSİYON (48 SAAT İÇİNDE):\nHesap 0095 için 3 taksitli yapılandırma teklifini resmi olarak ilet ve yazılı taahhüt iste.\n\n⚠️ KRİTİK UYARI:\nBu teklif son dostane çözüm adımıdır. Yazılı taahhüt gelmezse (7. Gün) kredi limiti otomatik düşürülecektir."
-  },
-  step_3: {
-    subject: "SİSTEM UYARISI: Hesap 0095 - Kredi Limiti İndirimi (%50)",
-    message: "HESAP: 0095 (Demirören Yapı A.Ş.)\n\n📌 AKSİYON (7. GÜN ESKALASYONU):\nYapılandırma teklifine yazılı taahhüt alınamadığı için ERP üzerinden Hesap 0095'in mevcut kredi limitini an itibarıyla %50 düşür.\n\n⚠️ SIRADAKİ ADIM (14. GÜN):\nEğer limit düşümüne rağmen ödeme gelmezse resmi noter ihtarı çekilecek ve sevkiyatlar durdurulacaktır."
-  },
-  step_4: {
-    subject: "HUKUKİ İŞLEM: Hesap 0095 - İcra Süreci Başlatma Talebi",
-    message: "HESAP: 0095 (Demirören Yapı A.Ş.)\n\n📌 AKSİYON (21. GÜN FİNAL ESKALASYONU):\nTüm uzlaşma yolları tükenmiştir. Yanıt alınamadığı için hesabı hukuki takip kuyruğunda icra dosyasına sevk et ve tüm siparişleri/sevkiyatları ERP üzerinden BLOKLA.\n\n✅ BEKLENEN KURTARIM:\nBatık statüsüne geçiş sebebiyle kurtarım oranının %15 seviyelerine düşme riski vardır. Hukuk departmanı ivedi işlem yapmalıdır."
-  }
-};
+import { useDashboardData } from "../../../features/demo/useDashboardData";
 
 interface OmnichannelActionModalProps {
   isOpen?: boolean;
@@ -54,6 +37,8 @@ export default function OmnichannelActionModal({
   const storeIsOpen = useGlobalStore((state) => state.isActionModalOpen);
   const storeActiveActionId = useGlobalStore((state) => state.activeActionId);
   const closeActionModal = useGlobalStore((state) => state.closeActionModal);
+  const dashboardData = useDashboardData();
+  const account = dashboardData.strategy.detail.accounts[0];
 
   const finalIsOpen = isOpen !== undefined ? isOpen : storeIsOpen;
 
@@ -71,11 +56,23 @@ export default function OmnichannelActionModal({
         `\n📌 SİSTEM TALİMATI:\n${aiInstruction}`
       ].filter(Boolean).join('\n');
       setMessage(details);
-    } else if (storeActiveActionId && templates[storeActiveActionId]) {
-      setSubject(templates[storeActiveActionId].subject);
-      setMessage(templates[storeActiveActionId].message);
+    } else if (storeActiveActionId) {
+      const step = account.steps.find(s => s.id === storeActiveActionId);
+      if (step) {
+        setSubject(`SİSTEM UYARISI: Hesap ${account.id} - ${step.title}`);
+        const formattedExposure = Math.round(account.exposure).toLocaleString('tr-TR');
+        const details = [
+          `HESAP: ${account.id} (${account.name})`,
+          `AÇIK POZİSYON: ${formattedExposure} TL`,
+          `GECİKME: ${account.overdue} Gün`,
+          `\n📌 AKSİYON (${step.day.toUpperCase()}):`,
+          step.aiInstruction,
+          `\n⚠️ FİNANSAL GEREKÇE:\n${account.financialRationale}`
+        ].join('\n');
+        setMessage(details);
+      }
     }
-  }, [storeActiveActionId, aiInstruction, accountId, accountName, exposure]);
+  }, [storeActiveActionId, aiInstruction, accountId, accountName, exposure, account]);
 
   if (!finalIsOpen) return null;
 

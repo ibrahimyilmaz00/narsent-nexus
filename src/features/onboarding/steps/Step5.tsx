@@ -8,9 +8,11 @@ import type { SectorKey } from "../types";
 
 export function Step5({
   sector,
+  values,
   onLaunch,
 }: {
   sector: SectorKey;
+  values: Record<string, string>;
   onLaunch: () => void;
 }) {
   const Dashboard = sectorRegistry[sector].Step5Dashboard;
@@ -26,7 +28,7 @@ export function Step5({
         </p>
       </div>
 
-      <Dashboard />
+      <Dashboard values={values} />
 
       <button
         onClick={onLaunch}
