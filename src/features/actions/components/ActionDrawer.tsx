@@ -168,7 +168,7 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
           </div>
 
           {/* UX Buttons */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 opacity-50 blur-[3px] pointer-events-none select-none">
             <button className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold transition-colors">
               <CheckCircle2 size={18} />
               Onayla ve İlet
