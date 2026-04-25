@@ -24,6 +24,17 @@ export interface TutorialStep {
   triggerWidgetAdd?: boolean;
   triggerClick?: string;   // fires on ENTERING the step (350ms delay)
   advanceClick?: string;   // fires when user presses the advance button (before navigation)
+  backOverrides?: {
+    navigateTo?: ViewMode;
+    forceSidebar?: boolean;
+    openDrawer?: boolean;
+    closeDrawer?: boolean;
+    openWidgetModal?: boolean;
+    closeWidgetModal?: boolean;
+    openOmnichannelModal?: boolean;
+    closeOmnichannelModal?: boolean;
+    triggerClick?: string;
+  };
 }
 
 export const tutorialSteps: TutorialStep[] = [
@@ -148,8 +159,10 @@ export const tutorialSteps: TutorialStep[] = [
       'Onayla, revize et, ertele ya da reddet — her karar kayıt altına alınır ve portföy genelinde öğrenme döngüsüne dahil edilir. Şimdi müşteri profiline geçelim.',
     buttonText: 'Detaylı İncele →',
     side: 'top',
-    navigateTo: 'account-profile',
-    closeDrawer: true,
+    backOverrides: {
+      navigateTo: 'actions',
+      openDrawer: true,
+    },
   },
   // ── Müşteri Profil Sayfası ────────────────────────────────────
   {
@@ -158,6 +171,8 @@ export const tutorialSteps: TutorialStep[] = [
     description:
       'Her müşteri için tam karar odası: risk metrikleri, açık pozisyonlar, yapay zeka tavsiyeleri ve icra planı tek ekranda.',
     buttonText: 'Keşfet',
+    navigateTo: 'account-profile',
+    closeDrawer: true,
   },
   {
     id: 'profile-header',
@@ -195,6 +210,9 @@ export const tutorialSteps: TutorialStep[] = [
       'Ekranın alt kısmını dilediğiniz analizlerle kişiselleştirebilirsiniz. Modül, metrik ve grafik türü seçerek özel widgetlar oluşturabilirsiniz. Şimdi kataloğu açalım.',
     buttonText: 'Kataloğu Aç',
     side: 'top',
+    backOverrides: {
+      closeWidgetModal: true,
+    },
   },
   {
     id: 'widget-catalog',
@@ -246,6 +264,9 @@ export const tutorialSteps: TutorialStep[] = [
       'Her adım izlenebilir ve görevlendirilebilir. Birinci adım aktif, sonrakiler sırayla devreye girer. "Görevi Aç" ile ekibe dağıtım başlatıyoruz.',
     buttonText: 'Görevi Aç →',
     fixedPosition: 'bottom-left',
+    backOverrides: {
+      closeOmnichannelModal: true,
+    },
   },
   // ── Aksiyon Dağıtım Merkezi ───────────────────────────────────
   {
@@ -269,6 +290,9 @@ export const tutorialSteps: TutorialStep[] = [
     buttonText: 'Dağıtımı Başlat',
     fixedPosition: 'bottom-right',
     frameOnly: true,
+    backOverrides: {
+      openOmnichannelModal: true,
+    },
   },
   {
     id: 'omni-success',
@@ -279,6 +303,9 @@ export const tutorialSteps: TutorialStep[] = [
     noOverlay: true,
     clickOmnichannelSend: true,
     fixedPosition: 'bottom-right',
+    backOverrides: {
+      openOmnichannelModal: true,
+    },
   },
   // ── Eskalasyon ─────────────────────────────────────────────────
   {
@@ -301,6 +328,10 @@ export const tutorialSteps: TutorialStep[] = [
     buttonText: 'Horizon Strategy →',
     side: 'right',
     forceSidebar: true,
+    backOverrides: {
+      navigateTo: 'account-profile',
+      forceSidebar: true,
+    },
   },
   {
     id: 'horizon-welcome',
@@ -359,6 +390,9 @@ export const tutorialSteps: TutorialStep[] = [
     buttonText: 'Senaryo 1\'i İncele →',
     side: 'top',
     advanceClick: '[data-tutorial="horizon-scenario1-incele"]',
+    backOverrides: {
+      triggerClick: '[data-tutorial="horizon-drawer-close"]',
+    },
   },
   // ── Operasyon Planı Drawer ────────────────────────────────────
   {

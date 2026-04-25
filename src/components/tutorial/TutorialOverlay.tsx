@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useGlobalStore, WidgetData } from "@/src/store/useGlobalStore";
 import { tutorialSteps, TutorialStep } from "@/src/features/tutorial/tutorialSteps";
 
@@ -91,42 +91,69 @@ export default function TutorialOverlay() {
   const isLast = tutorialStep === steps.length - 1;
   const isFirst = tutorialStep === 0;
 
+  const prevStepRef = useRef(tutorialStep);
+
   // Side effects when a step becomes active
   useEffect(() => {
     if (!isTutorialActive || !step) return;
 
-    if (step.navigateTo) setCurrentView(step.navigateTo);
-    if (step.forceSidebar !== undefined) setSidebarForced(step.forceSidebar);
-    if (step.openDrawer) setTutorialDrawerOpen(true);
-    if (step.closeDrawer) setTutorialDrawerOpen(false);
-    if (step.openWidgetModal) setWidgetModalOpen(true);
-    if (step.closeWidgetModal) setWidgetModalOpen(false);
-    if (step.autoAddDemoWidgets) {
+    const isGoingBack = tutorialStep < prevStepRef.current;
+    prevStepRef.current = tutorialStep;
+
+    const currentNav = isGoingBack && step.backOverrides?.navigateTo !== undefined ? step.backOverrides.navigateTo : step.navigateTo;
+    if (currentNav) setCurrentView(currentNav);
+
+    const currentForceSidebar = isGoingBack && step.backOverrides?.forceSidebar !== undefined ? step.backOverrides.forceSidebar : step.forceSidebar;
+    if (currentForceSidebar !== undefined) setSidebarForced(currentForceSidebar);
+
+    const openDrawer = isGoingBack && step.backOverrides?.openDrawer !== undefined ? step.backOverrides.openDrawer : step.openDrawer;
+    if (openDrawer) setTutorialDrawerOpen(true);
+
+    const closeDrawer = isGoingBack && step.backOverrides?.closeDrawer !== undefined ? step.backOverrides.closeDrawer : step.closeDrawer;
+    if (closeDrawer) setTutorialDrawerOpen(false);
+
+    const openWidgetModal = isGoingBack && step.backOverrides?.openWidgetModal !== undefined ? step.backOverrides.openWidgetModal : step.openWidgetModal;
+    if (openWidgetModal) setWidgetModalOpen(true);
+
+    const closeWidgetModal = isGoingBack && step.backOverrides?.closeWidgetModal !== undefined ? step.backOverrides.closeWidgetModal : step.closeWidgetModal;
+    if (closeWidgetModal) setWidgetModalOpen(false);
+
+    const openOmni = isGoingBack && step.backOverrides?.openOmnichannelModal !== undefined ? step.backOverrides.openOmnichannelModal : step.openOmnichannelModal;
+    if (openOmni) openActionModal('__tutorial__');
+
+    const closeOmni = isGoingBack && step.backOverrides?.closeOmnichannelModal !== undefined ? step.backOverrides.closeOmnichannelModal : step.closeOmnichannelModal;
+    if (closeOmni && !step.clickOmnichannelSend) closeActionModal();
+
+    if (step.autoAddDemoWidgets && !isGoingBack) {
       const existingIds = activeWidgets.map((w) => w.id);
       DEMO_WIDGETS.forEach((w) => {
         if (!existingIds.includes(w.id)) addWidget(w);
       });
     }
-    if (step.openOmnichannelModal) openActionModal('__tutorial__');
-    // Only close modal immediately when NOT also clicking send (send handles close timing)
-    if (step.closeOmnichannelModal && !step.clickOmnichannelSend) closeActionModal();
-    if (step.autoSelectChannels) {
+
+    if (!isGoingBack) {
+      if (step.autoSelectChannels) {
+        setTimeout(() => {
+          const btns = document.querySelectorAll('[data-tutorial="omni-channels"] button');
+          (btns[0] as HTMLButtonElement | undefined)?.click();
+          (btns[1] as HTMLButtonElement | undefined)?.click();
+        }, 450);
+      }
+      if (step.clickOmnichannelSend) {
+        // Click send at 300ms — modal must still be open at this point
+        setTimeout(() => {
+          const btn = document.querySelector('[data-tutorial="omni-send"] button') as HTMLButtonElement | null;
+          btn?.click();
+        }, 300);
+      }
+      if (step.triggerClick) {
+        setTimeout(() => {
+          (document.querySelector(step.triggerClick!) as HTMLElement | null)?.click();
+        }, 350);
+      }
+    } else if (isGoingBack && step.backOverrides?.triggerClick) {
       setTimeout(() => {
-        const btns = document.querySelectorAll('[data-tutorial="omni-channels"] button');
-        (btns[0] as HTMLButtonElement | undefined)?.click();
-        (btns[1] as HTMLButtonElement | undefined)?.click();
-      }, 450);
-    }
-    if (step.clickOmnichannelSend) {
-      // Click send at 300ms — modal must still be open at this point
-      setTimeout(() => {
-        const btn = document.querySelector('[data-tutorial="omni-send"] button') as HTMLButtonElement | null;
-        btn?.click();
-      }, 300);
-    }
-    if (step.triggerClick) {
-      setTimeout(() => {
-        (document.querySelector(step.triggerClick!) as HTMLElement | null)?.click();
+        (document.querySelector(step.backOverrides!.triggerClick!) as HTMLElement | null)?.click();
       }, 350);
     }
   }, [isTutorialActive, tutorialStep]); // eslint-disable-line react-hooks/exhaustive-deps
