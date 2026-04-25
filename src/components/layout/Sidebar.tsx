@@ -16,19 +16,39 @@ import { useGlobalStore } from "../../store/useGlobalStore";
 
 export default function Sidebar() {
   const [isDecisionEngineOpen, setIsDecisionEngineOpen] = useState(false);
-  
+
   const setCurrentView = useGlobalStore((state) => state.setCurrentView);
   const currentView = useGlobalStore((state) => state.currentView);
+  const isSidebarForcedOpen = useGlobalStore((state) => state.isSidebarForcedOpen);
+
+  // When sidebar is forced open by the tutorial, also expand the accordion
+  const decisionOpen = isDecisionEngineOpen || isSidebarForcedOpen;
+
+  // Helpers that swap visibility classes based on forced state
+  const vis = isSidebarForcedOpen
+    ? "opacity-100 block transition-opacity whitespace-nowrap"
+    : "opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity whitespace-nowrap";
+
+  const visFlex = isSidebarForcedOpen
+    ? "opacity-100 flex flex-col gap-1.5 transition-opacity whitespace-nowrap"
+    : "opacity-0 group-hover:opacity-100 hidden group-hover:flex flex-col gap-1.5 transition-opacity whitespace-nowrap";
+
+  const asideW = isSidebarForcedOpen
+    ? "w-64"
+    : "w-20 hover:w-64";
 
   return (
-    <aside className="w-20 hover:w-64 transition-all duration-300 ease-in-out group z-50 absolute sm:relative h-full flex flex-col bg-zinc-950 border-r border-zinc-800/50 shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
+    <aside
+      data-tutorial="sidebar"
+      className={`${asideW} transition-all duration-300 ease-in-out group z-50 absolute sm:relative h-full flex flex-col bg-zinc-950 border-r border-zinc-800/50 shadow-[4px_0_24px_rgba(0,0,0,0.2)]`}
+    >
       {/* Logo Section */}
       <div className="h-20 flex items-center px-6 border-b border-zinc-800/50 shrink-0 overflow-hidden">
         <div className="flex items-center gap-3">
           <div className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
             <Hexagon size={18} className="text-white fill-white/20" strokeWidth={2} />
           </div>
-          <span className="text-lg font-bold tracking-tight text-zinc-50 opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity whitespace-nowrap">
+          <span className={`text-lg font-bold tracking-tight text-zinc-50 ${vis}`}>
             Narsent Nexus
           </span>
         </div>
@@ -36,17 +56,17 @@ export default function Sidebar() {
 
       {/* Main Navigation */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-4 space-y-1.5 custom-scrollbar">
-        <div className="mb-4 px-2 opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500 whitespace-nowrap">
+        <div className={`mb-4 px-2 ${vis}`}>
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             Ana Modüller
           </span>
         </div>
 
         {/* Makro Kokpit */}
         <button
-          onClick={() => setCurrentView('dashboard')}
+          onClick={() => setCurrentView("dashboard")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-            currentView === 'dashboard'
+            currentView === "dashboard"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
           }`}
@@ -54,17 +74,17 @@ export default function Sidebar() {
           <div className="flex items-center justify-center min-w-[20px]">
             <LayoutDashboard size={18} strokeWidth={2} />
           </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+          <span className={`text-sm ${vis}`}>
             Makro Kokpit
           </span>
         </button>
 
         {/* Horizon Karar Motoru (Accordion) */}
-        <div className="space-y-1">
+        <div className="space-y-1" data-tutorial="horizon-nav">
           <button
             onClick={() => setIsDecisionEngineOpen(!isDecisionEngineOpen)}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-              currentView === 'actions'
+              currentView === "actions"
                 ? "bg-zinc-800/60 text-zinc-200 border-zinc-700/50"
                 : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
             }`}
@@ -73,14 +93,14 @@ export default function Sidebar() {
               <div className="flex items-center justify-center min-w-[20px]">
                 <Briefcase size={18} strokeWidth={2} />
               </div>
-              <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+              <span className={`text-sm ${vis}`}>
                 Horizon Karar Motoru
               </span>
             </div>
             <ChevronDown
               size={16}
-              className={`opacity-0 group-hover:opacity-100 hidden group-hover:block transition-all duration-300 ${
-                isDecisionEngineOpen ? "rotate-180 text-zinc-300" : "text-zinc-500"
+              className={`${vis} transition-all duration-300 ${
+                decisionOpen ? "rotate-180 text-zinc-300" : "text-zinc-500"
               }`}
             />
           </button>
@@ -88,23 +108,23 @@ export default function Sidebar() {
           {/* Expanded Sub-items */}
           <div
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isDecisionEngineOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
+              decisionOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
-            <div className="pl-[52px] pr-3 py-2 opacity-0 group-hover:opacity-100 hidden group-hover:flex flex-col gap-1.5 transition-opacity whitespace-nowrap">
-              <button 
-                onClick={() => setCurrentView('actions')}
+            <div className={`pl-[52px] pr-3 py-2 ${visFlex}`}>
+              <button
+                onClick={() => setCurrentView("actions")}
                 className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${
-                  currentView === 'actions' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
+                  currentView === "actions" ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 Gelecek Aksiyonlar
               </button>
-              <button 
+              <button
                 disabled
-                onClick={() => setCurrentView('kanban-archive')}
+                onClick={() => setCurrentView("kanban-archive")}
                 className={`w-full text-left text-xs font-medium py-1.5 transition-colors opacity-50 blur-[1px] cursor-not-allowed pointer-events-none ${
-                  currentView === 'kanban-archive' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
+                  currentView === "kanban-archive" ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 Kanban İcra Arşivi
@@ -115,9 +135,9 @@ export default function Sidebar() {
 
         {/* Horizon Strategy */}
         <button
-          onClick={() => setCurrentView('horizon_strategy')}
+          onClick={() => setCurrentView("horizon_strategy")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-            currentView === 'horizon_strategy'
+            currentView === "horizon_strategy"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
           }`}
@@ -125,17 +145,17 @@ export default function Sidebar() {
           <div className="flex items-center justify-center min-w-[20px]">
             <Target size={18} strokeWidth={2} />
           </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+          <span className={`text-sm ${vis}`}>
             Horizon Strategy
           </span>
         </button>
 
         {/* Performans ve Analitik */}
-        <button 
+        <button
           disabled
-          onClick={() => setCurrentView('performance')}
+          onClick={() => setCurrentView("performance")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap opacity-50 blur-[2px] cursor-not-allowed pointer-events-none ${
-            currentView === 'performance'
+            currentView === "performance"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
           }`}
@@ -143,7 +163,7 @@ export default function Sidebar() {
           <div className="flex items-center justify-center min-w-[20px]">
             <LineChart size={18} strokeWidth={2} />
           </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+          <span className={`text-sm ${vis}`}>
             Performans & Analitik
           </span>
         </button>
@@ -155,7 +175,7 @@ export default function Sidebar() {
           <div className="flex items-center justify-center min-w-[20px]">
             <Settings size={18} strokeWidth={2} />
           </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+          <span className={`text-sm ${vis}`}>
             Ayarlar
           </span>
         </button>
@@ -163,7 +183,7 @@ export default function Sidebar() {
           <div className="flex items-center justify-center min-w-[20px]">
             <LogOut size={18} strokeWidth={2} />
           </div>
-          <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
+          <span className={`text-sm ${vis}`}>
             Çıkış Yap
           </span>
         </button>

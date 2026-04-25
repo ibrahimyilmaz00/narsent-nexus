@@ -3,6 +3,8 @@ import { create } from 'zustand';
 type SegmentMode = 'genel' | 'b2b' | 'b2c';
 type ViewMode = 'dashboard' | 'actions' | 'account-profile' | 'kanban-archive' | 'horizon_strategy' | 'performance';
 
+const TOTAL_TUTORIAL_STEPS = 44;
+
 export interface WidgetData {
   id: string;
   module: string;
@@ -33,6 +35,17 @@ interface GlobalStore {
   activeActionId: string | null;
   openActionModal: (id: string) => void;
   closeActionModal: () => void;
+  // Tutorial
+  isTutorialActive: boolean;
+  tutorialStep: number;
+  startTutorial: () => void;
+  nextTutorialStep: () => void;
+  prevTutorialStep: () => void;
+  endTutorial: () => void;
+  isSidebarForcedOpen: boolean;
+  setSidebarForced: (v: boolean) => void;
+  tutorialDrawerOpen: boolean;
+  setTutorialDrawerOpen: (v: boolean) => void;
 }
 
 export const useGlobalStore = create<GlobalStore>((set) => ({
@@ -57,4 +70,19 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
   activeActionId: null,
   openActionModal: (id) => set({ isActionModalOpen: true, activeActionId: id }),
   closeActionModal: () => set({ isActionModalOpen: false, activeActionId: null }),
+  // Tutorial
+  isTutorialActive: false,
+  tutorialStep: 0,
+  startTutorial: () => set({ isTutorialActive: true, tutorialStep: 0 }),
+  nextTutorialStep: () => set((s) => ({
+    tutorialStep: Math.min(s.tutorialStep + 1, TOTAL_TUTORIAL_STEPS - 1),
+  })),
+  prevTutorialStep: () => set((s) => ({
+    tutorialStep: Math.max(s.tutorialStep - 1, 0),
+  })),
+  endTutorial: () => set({ isTutorialActive: false, tutorialStep: 0, isSidebarForcedOpen: false, tutorialDrawerOpen: false }),
+  isSidebarForcedOpen: false,
+  setSidebarForced: (v) => set({ isSidebarForcedOpen: v }),
+  tutorialDrawerOpen: false,
+  setTutorialDrawerOpen: (v) => set({ tutorialDrawerOpen: v }),
 }));

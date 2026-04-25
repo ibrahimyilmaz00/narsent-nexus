@@ -47,24 +47,66 @@ const METRICS: Record<string, { id: string; name: string; icon: any }[]> = {
     { id: 'bucket_breakdown', name: 'Geç Ödeme Olasılığı (Buckets)', icon: Clock },
     { id: 'on_time_vs_late_pct', name: 'Zamanında Ödeme vs Gecikme Oranı', icon: PieChart },
     { id: 'delay_gap', name: 'Vade Aşım Farkı (Delay Gap)', icon: AlertCircle },
+    { id: 'Predicted_DaysToPay', name: 'Tahmini Ödeme Günü (DTP) Analizi', icon: Activity },
+    { id: 'top_late_accounts', name: 'En Çok Geciktiren Hesaplar (Top Late)', icon: TrendingDown },
+    { id: 'top_risky_accounts', name: 'En Riskli Hesaplar (Top Risky)', icon: ShieldAlert },
+    { id: 'High_Risk_Count', name: 'Yüksek Riskli Fatura Hacmi', icon: AlertTriangle },
+    { id: 'PaymentProbability_distribution', name: 'Detaylı Olasılık Eğrisi (0-60+ Gün)', icon: TrendingUp },
+    { id: 'Days_Term', name: 'Ortalama Vade (Days Term) Dağılımı', icon: Calendar },
+    { id: 'tier_counts', name: 'Veri Kaynağı Güvenilirliği (Source)', icon: Database },
+    { id: 'Expected_Payment_Date', name: 'Tahmini Ödeme Tarihi Projeksiyonu', icon: Clock },
+    { id: 'exposure_analysis_tl', name: 'Açık Tutar ve Vade Analizi (TL)', icon: DollarSign },
+    { id: 'concentration_risk_new', name: 'Müşteri Yoğunlaşma Riski (Konsantrasyon)', icon: PieChart },
+    { id: 'xai_params', name: 'XAI Risk Faktörleri Analizi', icon: Target },
   ],
   'module2': [
     { id: 'forecast', name: '12 Haftalık Nakit Giriş Trendi', icon: TrendingUp },
     { id: 'forecast_interval', name: 'İyimser vs Kötümser Senaryo Eğrisi', icon: Activity },
     { id: 'horizon_aggregates', name: 'Vade Bazlı Projeksiyon (1H, 1A, 3A)', icon: BarChart2 },
     { id: 'total_forecast', name: 'Toplam Beklenen Nakit (12 Hf)', icon: DollarSign },
+    { id: 'historical_4w_comparison', name: 'Tarihsel Trend vs Gelecek Kıyaslaması', icon: Target },
+    { id: 'tier_confidence', name: 'Tahmin Güven Skoru Analizi', icon: ShieldCheck },
+    { id: 'weekly_min_max_forecast', name: 'Dip ve Zirve Hafta Analizi', icon: Activity },
+    { id: 'interval_width', name: 'Tahmin Sapma Aralığı (Varyans)', icon: Layers },
+    { id: 'min_confidence', name: 'Model Kesinlik Sınırı (Min Confidence)', icon: Target },
+    { id: 'input_rows', name: 'İşlenen Fatura Hacmi (Data Input)', icon: Database },
   ],
   'module3': [
     { id: 'Net_Cash_Position', name: 'Ufuk Bazlı Net Nakit (W/1M/3M)', icon: DollarSign },
     { id: 'Cash_Deficit_Prob', name: 'Nakit Açığı İhtimali (Deficit Prob)', icon: Activity },
     { id: 'Net_Cash_percentiles', name: 'Monte Carlo Nakit Senaryoları (P10-P90)', icon: Layers },
     { id: 'Cash_Out_breakdown', name: 'Gider Kırılımı (OpEx vs COGS)', icon: PieChart },
+    { id: 'Cash_At_Risk', name: 'Riske Atılan Nakit (VaR - %95/%99)', icon: AlertOctagon },
+    { id: 'overall_risk_flag', name: 'Konsolide Risk Durum Bayrağı', icon: ShieldAlert },
+    { id: 'root_cause', name: 'Kök Neden Analizi (Root Cause)', icon: Target },
+    { id: 'AR_Recovery_Uplift', name: 'Tahsilat İyileşme Potansiyeli (AR Uplift)', icon: TrendingUp },
+    { id: 'delay_shift_factor', name: 'Makro Gecikme Etkisi (Delay Shift)', icon: Clock },
+    { id: 'uncertainty_multiplier', name: 'Belirsizlik Çarpanı (Uncertainty)', icon: AlertCircle },
+    { id: 'expense_timing', name: 'Gider Zamanlaması (Expense Timing)', icon: Calendar },
+    { id: 'revenue_base_weekly', name: 'Haftalık Temel Gelir (Revenue Base)', icon: BarChart2 },
+    { id: 'portfolio_risk_score', name: 'Portföy Risk Skoru Etkisi', icon: Users },
+    { id: 'at_risk_amount', name: 'Tehlikedeki Toplam Tutar (At Risk)', icon: AlertTriangle },
+    { id: 'Forecast_Confidence', name: 'Simülasyon Güven Skoru', icon: ShieldCheck },
   ],
   'module4': [
     { id: 'm4_priority_tier', name: 'İş Emri Öncelik (Tier) Dağılımı', icon: Flame },
     { id: 'm4_action_type', name: 'Aksiyon Tipi (Action Type) Dağılımı', icon: Activity },
     { id: 'm4_weekly_cost', name: 'Hesap Bazı Haftalık İnaksiyon Maliyeti', icon: DollarSign },
     { id: 'm4_exposure_vs_recovery', name: 'Açık Tutar vs Beklenen Kurtarım', icon: GitCompare },
+    { id: 'm4_risk_vs_delay', name: 'Hesap Risk Skoru ve Gecikme Analizi', icon: Crosshair },
+    { id: 'm4_invoice_count', name: 'İş Emri Fatura Yoğunluğu (Count)', icon: Database },
+    { id: 'm4_priority_raw', name: 'Ham Öncelik Skoru (Priority Raw) Sıralaması', icon: Layers },
+    { id: 'm4_recovery_rate', name: 'Hesap Bazı Kurtarma Oranı (%)', icon: TrendingUp },
+    { id: 'm4_total_exposure', name: 'Portföy Toplam Açık Pozisyonu', icon: Briefcase },
+    { id: 'm4_forecast_total', name: 'Tahmini Portföy Nakit Girişi (12H / Ort)', icon: LineChart },
+    { id: 'm4_weakest_strongest', name: 'En Zayıf vs En Güçlü Tahsilat Beklentisi', icon: GitCompare },
+    { id: 'm4_portfolio_risk', name: 'Portföy Ağırlıklı Risk ve Geç Ödeme (%)', icon: ShieldAlert },
+    { id: 'm4_net_cash_horizon', name: 'Portföy Net Nakit Ufku (Hafta/Ay/3Ay)', icon: Wallet },
+    { id: 'm4_confidence_urgency', name: 'Pipeline AI Güven Skoru ve Aciliyet', icon: ShieldCheck },
+    { id: 'm4_overall_flag', name: 'Genel Portföy Sağlık Bayrağı', icon: Flag },
+    { id: 'm4_scenario_recovery', name: 'Senaryo Bazı Beklenen Kurtarma (Kademeli vs Agresif)', icon: BarChart2 },
+    { id: 'm4_churn_risk', name: 'Senaryo Bazı Müşteri Kaybı (Churn) Riski', icon: Users },
+    { id: 'm4_discount_vs_legal', name: 'İskonto Maliyeti vs Hukuki İcra Maliyeti', icon: AlertTriangle },
   ]
 };
 
@@ -255,20 +297,24 @@ export default function WidgetCatalogModal() {
             )}
 
             <div className="flex flex-col gap-2">
-              {METRICS[selectedModule]?.map((item) => {
-                const isActive = item.id === selectedMetric;
+              {METRICS[selectedModule]?.map((item, index) => {
+                const isBlurred = index >= 4;
+                const isActive = item.id === selectedMetric && !isBlurred;
                 const Icon = item.icon;
                 return (
                   <button 
                     key={item.id}
-                    onClick={() => setSelectedMetric(item.id)}
+                    disabled={isBlurred}
+                    onClick={() => !isBlurred && setSelectedMetric(item.id)}
                     className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all text-left group ${
-                      isActive
-                      ? 'border-2 border-blue-500 bg-zinc-900 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.15)] ring-2 ring-blue-500/20 ring-offset-2 ring-offset-zinc-950'
-                      : 'border border-zinc-800/60 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-300 hover:border-zinc-700'
+                      isBlurred
+                      ? 'opacity-40 blur-[2px] cursor-not-allowed select-none border border-zinc-800/30 bg-zinc-900/20 text-zinc-500'
+                      : isActive
+                        ? 'border-2 border-blue-500 bg-zinc-900 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.15)] ring-2 ring-blue-500/20 ring-offset-2 ring-offset-zinc-950'
+                        : 'border border-zinc-800/60 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-300 hover:border-zinc-700'
                     }`}
                   >
-                    <Icon size={20} className={`shrink-0 ${isActive ? 'text-blue-400' : 'group-hover:text-zinc-300'}`} />
+                    <Icon size={20} className={`shrink-0 ${isActive ? 'text-blue-400' : isBlurred ? 'text-zinc-600' : 'group-hover:text-zinc-300'}`} />
                     <span className="text-sm font-semibold">{item.name}</span>
                   </button>
                 )
@@ -320,7 +366,8 @@ export default function WidgetCatalogModal() {
           >
             İptal
           </button>
-          <button 
+          <button
+            data-tutorial="widget-add-btn"
             onClick={handleAddWidget}
             className="px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition-all active:scale-95"
           >

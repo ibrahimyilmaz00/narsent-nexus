@@ -33,7 +33,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
       <div className="w-full min-h-screen bg-zinc-950 p-6 sm:p-8 animate-in fade-in slide-in-from-right-4 duration-300">
 
         {/* NAVİGASYON VE BAŞLIK */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-zinc-800/50 pb-6">
+        <div data-tutorial="horizon-header" className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-zinc-800/50 pb-6">
           <div>
             <button onClick={onBack} className="flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors text-xs font-bold uppercase tracking-wider">
               <ArrowLeft size={14} /> Rapor Arşivine Dön
@@ -50,7 +50,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* AI YÖNETİCİ ÖZETİ (Executive Summary) */}
-        <div className="mb-8 relative overflow-hidden rounded-2xl bg-indigo-900/10 border border-indigo-500/20 p-6 sm:p-8">
+        <div data-tutorial="horizon-executive" className="mb-8 relative overflow-hidden rounded-2xl bg-indigo-900/10 border border-indigo-500/20 p-6 sm:p-8">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
           <div className="flex items-start gap-4 relative z-10">
             <div className="p-3 bg-indigo-500/20 rounded-xl shrink-0">
@@ -66,7 +66,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* GÖRSELLEŞTİRİLMİŞ KPI KARTLARI (4'LÜ GRID) */}
-        <div className="mb-10">
+        <div className="mb-10" data-tutorial="horizon-kpis">
           <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Portföy Nabzı & Likidite</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -118,7 +118,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* SENARYO ANALİZİ VE AKSİYON MEKANİZMASI */}
-        <div className="mb-10">
+        <div className="mb-10" data-tutorial="horizon-scenarios">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
               <Scale size={16} /> Stratejik Senaryo Karşılaştırması
@@ -160,6 +160,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 {/* AKSİYON BUTONLARI */}
                 <div className="space-y-2">
                   <button
+                    data-tutorial={scenario.isRecommended ? "horizon-scenario1-incele" : undefined}
                     onClick={() => setDrawerScenarioId(scenario.id)}
                     className="w-full py-3 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white rounded-xl text-sm font-bold transition-all border border-zinc-700 flex justify-center items-center gap-2"
                   >
@@ -182,7 +183,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* FİNANSAL ETKİ VE OPERASYONEL YÜK (ROI & INACTION COST) */}
-        <div className="mb-10">
+        <div className="mb-10" data-tutorial="horizon-impact">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
             {/* Sol: Eylemsizlik Maliyeti (Kanama) */}
@@ -226,7 +227,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* STRATEJİK RİSK VE KURTARIM HUNİSİ */}
-        <div className="mb-10 p-8 bg-zinc-900/20 border border-zinc-800/80 rounded-3xl relative overflow-hidden">
+        <div className="mb-10 p-8 bg-zinc-900/20 border border-zinc-800/80 rounded-3xl relative overflow-hidden" data-tutorial="horizon-waterfall">
           <div className="absolute top-0 right-0 p-8 opacity-5"><Filter size={200} /></div>
 
           <div className="flex flex-col lg:flex-row gap-12 relative z-10">
@@ -311,7 +312,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
         </div>
 
         {/* DERİN ANALİZ VE SİSTEM LOGLARI */}
-        <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+        <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200" data-tutorial="horizon-system">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
               <LineChart size={16} /> Sistem Analizi & Finansal Projeksiyon
@@ -406,7 +407,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
           <div className="fixed top-0 right-0 h-full w-full max-w-2xl bg-zinc-950 border-l border-zinc-800 z-50 flex flex-col animate-in slide-in-from-right duration-300">
 
             {/* Drawer Header */}
-            <div className="sticky top-0 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800 p-6 flex items-center justify-between z-10">
+            <div data-tutorial="horizon-drawer-header" className="sticky top-0 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800 p-6 flex items-center justify-between z-10">
               <div>
                 <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
                   <Layers size={20} className="text-blue-500" />
@@ -415,6 +416,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                 <p className="text-xs text-zinc-500 mt-1">Onay verildiğinde aşağıdaki hesaplar için otomatik iş emirleri oluşturulacaktır.</p>
               </div>
               <button
+                data-tutorial="horizon-drawer-close"
                 onClick={() => { setDrawerScenarioId(null); setExpandedAccount(null); }}
                 className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
               >
@@ -423,11 +425,12 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
             </div>
 
             {/* Drawer Body — Hesap Listesi */}
-            <div className="p-6 space-y-4 flex-1 overflow-y-auto">
-              {dashboardData.accounts.map((account) => (
+            <div data-tutorial="horizon-drawer-body" className="p-6 space-y-4 flex-1 overflow-y-auto">
+              {dashboardData.accounts.map((account, accountIdx) => (
                 <div key={account.id} className="bg-zinc-900/40 border border-zinc-800 rounded-xl overflow-hidden transition-all hover:border-zinc-700">
                   {/* Ana Kart Görünümü */}
                   <div
+                    data-tutorial={accountIdx === 0 ? "horizon-account-expand" : undefined}
                     onClick={() => setExpandedAccount(expandedAccount === account.id ? null : account.id)}
                     className="p-5 flex items-center justify-between cursor-pointer"
                   >
@@ -503,7 +506,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                       {/* Görev Listesi (Mevcut kodun aynen kalacak) */}
                       <div className="space-y-2.5 mb-6">
-                        {account.steps?.map((step: StrategyStep) => {
+                        {account.steps?.map((step: StrategyStep, stepIdx: number) => {
                           const isChecked = checkedSteps.includes(step.id);
                           const isPreviewOpen = previewStepId === step.id;
 
@@ -515,7 +518,11 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                                 <div className="flex items-start gap-3 sm:gap-4 flex-1">
                                   {/* Yuvarlak Görev Onay İkonu */}
-                                  <button onClick={(e) => { e.stopPropagation(); toggleStep(step.id); }} className="mt-0.5 transition-colors shrink-0 outline-none">
+                                  <button
+                                    data-tutorial={accountIdx === 0 && stepIdx === 0 ? "horizon-step-check" : undefined}
+                                    onClick={(e) => { e.stopPropagation(); toggleStep(step.id); }}
+                                    className="mt-0.5 transition-colors shrink-0 outline-none"
+                                  >
                                     {isChecked ? <CheckCircle2 size={20} className="text-blue-500" /> : <Circle size={20} className="text-zinc-600 hover:text-zinc-400" />}
                                   </button>
 
@@ -532,6 +539,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                                   {/* İçeriği (Taslağı) Gör Butonu */}
                                   <button
+                                    data-tutorial={accountIdx === 0 && stepIdx === 0 ? "horizon-step-eye" : undefined}
                                     onClick={(e) => { e.stopPropagation(); setPreviewStepId(isPreviewOpen ? null : step.id); }}
                                     className={`p-2 rounded-lg transition-colors border ${isPreviewOpen ? 'bg-indigo-500/20 border-indigo-500/30 text-indigo-400' : 'bg-zinc-900 border-zinc-800/50 text-zinc-400 hover:text-white'}`}
                                     title="AI İçerik Taslağını İncele"
@@ -541,6 +549,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                                   {/* Kanal Seçim Modalı (Aksiyon Dağıtım) Butonu */}
                                   <button
+                                    data-tutorial={accountIdx === 0 && stepIdx === 0 ? "horizon-step-gear" : undefined}
                                     disabled={!isChecked}
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -583,7 +592,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
             </div>
 
             {/* DRAWER FOOTER: TOPLU DAĞITIM BUTONU */}
-            <div className="p-5 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-20">
+            <div data-tutorial="horizon-drawer-deploy" className="p-5 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-20">
               <div className="flex items-center justify-between gap-4">
                 <div className="hidden sm:block">
                   <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-1">Operasyon Özeti</div>
@@ -607,16 +616,14 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
       {/* SPESİFİK ADIM İÇİN AKSİYON DAĞITIM MODALI */}
       {isActionModalOpen && selectedStepForAction && activeAccountContext && (
-        <div className="relative z-[99999]">
-          <OmnichannelActionModal
-            isOpen={isActionModalOpen}
-            onClose={() => setIsActionModalOpen(false)}
-            accountId={activeAccountContext.id}
-            accountName={activeAccountContext.name}
-            exposure={formatTL(activeAccountContext.exposure)}
-            aiInstruction={selectedStepForAction.aiInstruction}
-          />
-        </div>
+        <OmnichannelActionModal
+          isOpen={isActionModalOpen}
+          onClose={() => setIsActionModalOpen(false)}
+          accountId={activeAccountContext.id}
+          accountName={activeAccountContext.name}
+          exposure={formatTL(activeAccountContext.exposure)}
+          aiInstruction={selectedStepForAction.aiInstruction}
+        />
       )}
       {/* HARİCİ BİLEŞEN: TOPLU DAĞITIM MODALI */}
       <BatchDeploymentModal 

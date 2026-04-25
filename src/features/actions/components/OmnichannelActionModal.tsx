@@ -37,6 +37,7 @@ export default function OmnichannelActionModal({
   const storeIsOpen = useGlobalStore((state) => state.isActionModalOpen);
   const storeActiveActionId = useGlobalStore((state) => state.activeActionId);
   const closeActionModal = useGlobalStore((state) => state.closeActionModal);
+  const isTutorialActive = useGlobalStore((state) => state.isTutorialActive);
   const dashboardData = useDashboardData();
   const account = dashboardData.strategy.detail.accounts[0];
 
@@ -57,7 +58,8 @@ export default function OmnichannelActionModal({
       ].filter(Boolean).join('\n');
       setMessage(details);
     } else if (storeActiveActionId) {
-      const step = account.steps.find(s => s.id === storeActiveActionId);
+      // '__tutorial__' is a sentinel used by the tutorial system — fall back to first step
+      const step = account.steps.find(s => s.id === storeActiveActionId) ?? account.steps[0];
       if (step) {
         setSubject(`SİSTEM UYARISI: Hesap ${account.id} - ${step.title}`);
         const formattedExposure = Math.round(account.exposure).toLocaleString('tr-TR');
@@ -129,7 +131,8 @@ export default function OmnichannelActionModal({
             {/* Header */}
             <div className="flex items-center justify-between shrink-0 p-6 border-b border-zinc-800/50">
               <h2 className="text-2xl font-bold text-zinc-50 tracking-tight">Aksiyon Dağıtım Merkezi</h2>
-              <button 
+              <button
+                data-tutorial="omni-modal-x"
                 onClick={handleClose}
                 className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 rounded-xl transition-colors"
               >
@@ -141,7 +144,7 @@ export default function OmnichannelActionModal({
             <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 p-6 flex flex-col gap-8">
               
               {/* Kanal Seçimi */}
-              <div>
+              <div data-tutorial="omni-channels">
                 <label className="text-sm font-semibold text-zinc-300 block mb-3 uppercase tracking-wider">
                   Dağıtım Kanalları
                 </label>
@@ -168,7 +171,7 @@ export default function OmnichannelActionModal({
               </div>
 
               {/* Mesaj İçeriği */}
-              <div className="flex flex-col gap-4">
+              <div data-tutorial="omni-message" className="flex flex-col gap-4">
                 <div>
                   <label className="text-sm font-semibold text-zinc-300 block mb-2 uppercase tracking-wider">
                     Konu / Başlık
@@ -197,7 +200,7 @@ export default function OmnichannelActionModal({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between shrink-0 p-6 border-t border-zinc-800/50 bg-zinc-950">
+            <div data-tutorial="omni-send" className="flex items-center justify-between shrink-0 p-6 border-t border-zinc-800/50 bg-zinc-950">
               <div className="text-sm font-medium text-zinc-400">
                 <span className="text-zinc-200 font-bold">{selectedChannels.length}</span> Kanal Seçildi
               </div>

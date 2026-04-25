@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Filter, ArrowRight } from "lucide-react";
 import ActionDrawer, { ActionItemData } from "./ActionDrawer";
 import { useDashboardData } from "../../demo/useDashboardData";
+import { useGlobalStore } from "../../../store/useGlobalStore";
 import type { WorkOrder } from "../../demo/demoTypes";
 
 type Urgency = "KRİTİK" | "YÜKSEK" | "ORTA";
@@ -60,6 +61,19 @@ export default function ActionTable() {
   const [selectedAction, setSelectedAction] = useState<ActionItemData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  const tutorialDrawerOpen = useGlobalStore((s) => s.tutorialDrawerOpen);
+
+  // Tutorial controls the drawer externally
+  useEffect(() => {
+    if (tutorialDrawerOpen && mockActions.length > 0) {
+      setSelectedAction(mockActions[0]);
+      setIsDrawerOpen(true);
+    } else if (!tutorialDrawerOpen) {
+      setIsDrawerOpen(false);
+      setTimeout(() => setSelectedAction(null), 300);
+    }
+  }, [tutorialDrawerOpen, mockActions]);
+
   const handleOpenDrawer = (action: ActionItemData) => {
     setSelectedAction(action);
     setIsDrawerOpen(true);
@@ -67,7 +81,7 @@ export default function ActionTable() {
 
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
-    setTimeout(() => setSelectedAction(null), 300); // Clear data after animation
+    setTimeout(() => setSelectedAction(null), 300);
   };
 
   return (

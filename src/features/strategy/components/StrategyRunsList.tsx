@@ -22,10 +22,11 @@ export const StrategyRunsList = ({ onSelectReport }: Props) => {
           <p className="text-zinc-400 text-sm">AI tarafından oluşturulan dönemsel portföy optimizasyon raporları.</p>
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4" data-tutorial="horizon-runs">
         {pipelineRuns.map((run, index) => (
           <div
             key={run.id}
+            data-tutorial={index === 0 ? "horizon-run-first" : undefined}
             onClick={() => index === 0 && onSelectReport(run.id)}
             className={`group flex items-center justify-between p-5 rounded-2xl border transition-all ${index === 0 ? (run.isLatest ? 'bg-blue-900/10 border-blue-500/30 hover:bg-blue-900/20 cursor-pointer hover:scale-[1.01]' : 'bg-zinc-900/30 border-zinc-800 hover:bg-zinc-900/50 hover:border-zinc-700 cursor-pointer hover:scale-[1.01]') : 'opacity-50 blur-[3px] pointer-events-none select-none bg-zinc-900/30 border-zinc-800'}`}
           >

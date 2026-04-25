@@ -46,7 +46,7 @@ export default function AccountProfileView() {
       {/* ═══════════════════════════════════════
          Header & Back Button
          ═══════════════════════════════════════ */}
-      <div className="mb-6 shrink-0 flex flex-col items-start gap-4">
+      <div className="mb-6 shrink-0 flex flex-col items-start gap-4" data-tutorial="profile-header">
         {/* Back Button */}
         <button
           onClick={handleGoBack}
@@ -98,7 +98,7 @@ export default function AccountProfileView() {
       {/* ═══════════════════════════════════════
          Finansal Özet Kartları (3-grid)
          ═══════════════════════════════════════ */}
-      <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-6 shrink-0 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-6 shrink-0 mb-8" data-tutorial="profile-financials">
 
         {/* Kart 1 */}
         <div className="h-full flex flex-col gap-2 rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-sm hover:bg-zinc-900/60 transition-colors">
@@ -150,7 +150,7 @@ export default function AccountProfileView() {
          ═══════════════════════════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         {/* SOL KOLON: Modül 1 ve Modül 3 artık alt alta, aynı güvenli kutunun içinde */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6" data-tutorial="profile-modules">
           <Module1AnalysisPanel />
           <Module3ImpactPanel />
         </div>
@@ -168,7 +168,7 @@ export default function AccountProfileView() {
       {/* ANA GRİD BİTİŞİ */}
 
       {/* EN ALT BÖLÜM: Sadece Widget Alanı */}
-      <div className="w-full mt-16 pt-12 border-t border-zinc-800/60 block clear-both">
+      <div className="w-full mt-16 pt-12 border-t border-zinc-800/60 block clear-both" data-tutorial="profile-widgets">
         <WidgetGrid />
       </div>
 

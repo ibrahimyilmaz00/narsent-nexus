@@ -7,6 +7,7 @@ import { useDashboardData } from "../../../features/demo/useDashboardData";
 
 export default function HorizonActionPanel() {
   const openActionModal = useGlobalStore((state) => state.openActionModal);
+  const isTutorialActive = useGlobalStore((state) => state.isTutorialActive);
   const dashboardData = useDashboardData();
   const account = dashboardData.strategy.detail.accounts[0];
 
@@ -16,7 +17,7 @@ export default function HorizonActionPanel() {
       {/* ═══════════════════════════════════════
          Acil Eylem Komutu
          ═══════════════════════════════════════ */}
-      <div className="flex flex-col rounded-2xl bg-zinc-900/80 border border-zinc-800 p-5 shadow-sm">
+      <div data-tutorial="acil-aksiyon" className="flex flex-col rounded-2xl bg-zinc-900/80 border border-zinc-800 p-5 shadow-sm">
         <div className="flex items-center gap-2 mb-3">
           <Activity size={18} className="text-red-400" />
           <h3 className="text-sm font-bold text-zinc-100 uppercase tracking-wide">
@@ -32,34 +33,33 @@ export default function HorizonActionPanel() {
       </div>
 
       {/* ═══════════════════════════════════════
-         AI Finansal Rasyoneli (XAI)
+         AI Finansal Rasyoneli + İlişki Notu
          ═══════════════════════════════════════ */}
-      <div>
-        <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-          <ShieldAlert size={14} />
-          AI Rasyoneli ve Kök Neden
-        </h4>
-        <p className="text-zinc-400 text-sm leading-relaxed font-medium bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/50">
-          {account.financialRationale}
-        </p>
-      </div>
-
-      {/* ═══════════════════════════════════════
-         İlişki ve Strateji Notu
-         ═══════════════════════════════════════ */}
-      <div className="flex items-start gap-3 bg-purple-500/10 border border-purple-500/30 p-4 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.05)]">
-        <div className="flex-shrink-0 mt-0.5">
-          <Lightbulb size={20} className="text-purple-400" />
+      <div data-tutorial="ai-rasyonel" className="flex flex-col gap-4">
+        <div>
+          <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+            <ShieldAlert size={14} />
+            AI Rasyoneli ve Kök Neden
+          </h4>
+          <p className="text-zinc-400 text-sm leading-relaxed font-medium bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/50">
+            {account.financialRationale}
+          </p>
         </div>
-        <p className="text-purple-400 text-sm font-medium leading-relaxed">
-          {account.relationshipNote}
-        </p>
+
+        <div className="flex items-start gap-3 bg-purple-500/10 border border-purple-500/30 p-4 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.05)]">
+          <div className="flex-shrink-0 mt-0.5">
+            <Lightbulb size={20} className="text-purple-400" />
+          </div>
+          <p className="text-purple-400 text-sm font-medium leading-relaxed">
+            {account.relationshipNote}
+          </p>
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════
          Uygulama Adımları (Stepper)
          ═══════════════════════════════════════ */}
-      <div>
+      <div data-tutorial="icra-sureci">
         <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-4">
           Beklenen İcra Süreci
         </h4>
@@ -76,8 +76,8 @@ export default function HorizonActionPanel() {
                   {step.title} <span className="text-zinc-500 font-normal">({step.day})</span>
                 </span>
               </div>
-              <button 
-                onClick={() => openActionModal(step.id)}
+              <button
+                onClick={() => !isTutorialActive && openActionModal(step.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
               >
                 {index === 0 ? (
@@ -95,7 +95,7 @@ export default function HorizonActionPanel() {
       {/* ═══════════════════════════════════════
          Eskalasyon Zaman Çizelgesi (Timeline)
          ═══════════════════════════════════════ */}
-      <div className="mt-2">
+      <div className="mt-2" data-tutorial="eskalasyon">
         <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
           <Clock size={14} />
           Eskalasyon Matrisi

@@ -28,22 +28,26 @@ interface ActionDrawerProps {
 export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProps) {
   const setCurrentView = useGlobalStore((state) => state.setCurrentView);
   const setSelectedAccountId = useGlobalStore((state) => state.setSelectedAccountId);
+  const isTutorialActive = useGlobalStore((state) => state.isTutorialActive);
 
   if (!isOpen || !data) return null;
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — disabled during tutorial so overlay stays in control */}
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-        onClick={onClose}
+        onClick={isTutorialActive ? undefined : onClose}
       />
 
       {/* Side Panel */}
       <div className="fixed inset-y-0 right-0 w-full md:w-[45%] lg:w-[40%] bg-zinc-950 border-l border-zinc-800 z-50 overflow-y-auto transform transition-transform duration-300 translate-x-0 shadow-2xl flex flex-col">
 
         {/* Header - Sticky */}
-        <div className="sticky top-0 bg-zinc-950/80 backdrop-blur-md z-10 border-b border-zinc-800/50 p-6 flex items-start justify-between">
+        <div
+          data-tutorial="drawer-header"
+          className="sticky top-0 bg-zinc-950/80 backdrop-blur-md z-10 border-b border-zinc-800/50 p-6 flex items-start justify-between"
+        >
           <div>
             <h2 className="text-xl font-bold text-zinc-50">{data.customerName}</h2>
             <div className="flex items-center gap-3 mt-2">
@@ -79,7 +83,7 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
         <div className="p-6 space-y-6 flex-1">
 
           {/* Aksiyon Komutu */}
-          <div>
+          <div data-tutorial="drawer-ai-command">
             <div className="flex items-center gap-2 mb-3">
               <Activity size={16} className="text-blue-400" />
               <h3 className="text-sm font-semibold text-zinc-300">Önerilen Aksiyon Komutu</h3>
@@ -89,19 +93,19 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
                 {data.aiSuggestion}
               </p>
             </div>
-          </div>
 
-          {/* Finansal Gerekçe (XAI) */}
-          <div>
-            <h3 className="text-sm font-semibold text-zinc-300 mb-3">Yapay Zeka Rasyoneli</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-zinc-900/50 border border-zinc-800/50 p-3 rounded-lg flex flex-col gap-1">
-                <span className="text-[10px] uppercase text-zinc-500 font-semibold">Gecikme İhtimali</span>
-                <span className="text-lg font-bold text-orange-400">%42 <span className="text-xs font-medium text-zinc-500">(Artış Eğilimi)</span></span>
-              </div>
-              <div className="bg-zinc-900/50 border border-zinc-800/50 p-3 rounded-lg flex flex-col gap-1">
-                <span className="text-[10px] uppercase text-zinc-500 font-semibold">Tavsiye Güveni</span>
-                <span className="text-lg font-bold text-blue-400">%94 <span className="text-xs font-medium text-zinc-500">(Yüksek)</span></span>
+            {/* Finansal Gerekçe (XAI) */}
+            <div className="mt-4">
+              <h3 className="text-sm font-semibold text-zinc-300 mb-3">Yapay Zeka Rasyoneli</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-zinc-900/50 border border-zinc-800/50 p-3 rounded-lg flex flex-col gap-1">
+                  <span className="text-[10px] uppercase text-zinc-500 font-semibold">Gecikme İhtimali</span>
+                  <span className="text-lg font-bold text-orange-400">%42 <span className="text-xs font-medium text-zinc-500">(Artış Eğilimi)</span></span>
+                </div>
+                <div className="bg-zinc-900/50 border border-zinc-800/50 p-3 rounded-lg flex flex-col gap-1">
+                  <span className="text-[10px] uppercase text-zinc-500 font-semibold">Tavsiye Güveni</span>
+                  <span className="text-lg font-bold text-blue-400">%94 <span className="text-xs font-medium text-zinc-500">(Yüksek)</span></span>
+                </div>
               </div>
             </div>
           </div>
@@ -117,7 +121,7 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
           </div>
 
           {/* Adım Adım İcra (Vertical Stepper) */}
-          <div>
+          <div data-tutorial="drawer-execution">
             <h3 className="text-sm font-semibold text-zinc-300 mb-4">Otomatik İcra Senaryosu</h3>
             <div className="pl-2 space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-zinc-800 before:via-zinc-800 before:to-transparent">
 
@@ -159,8 +163,10 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
         </div>
 
         {/* Footer Actions - Sticky */}
-        <div className="sticky bottom-0 bg-zinc-950/90 backdrop-blur-md border-t border-zinc-800/50 p-6 z-10 space-y-4">
-
+        <div
+          data-tutorial="drawer-footer"
+          className="sticky bottom-0 bg-zinc-950/90 backdrop-blur-md border-t border-zinc-800/50 p-6 z-10 space-y-4"
+        >
           {/* Ribbon */}
           <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg font-bold text-center text-sm shadow-[0_0_20px_rgba(239,68,68,0.1)]">
             <AlertTriangle size={16} className="inline-block mr-2 pb-0.5" />
