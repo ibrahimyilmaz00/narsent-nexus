@@ -1,6 +1,7 @@
 "use client";
 import { useGlobalStore } from "../../store/useGlobalStore";
 import Sidebar from "../../components/layout/Sidebar";
+import { ToastContainer } from "../../components/ui/Toast";
 
 import KPICards from "./components/KPICards";
 import LiquidityChart from "./components/LiquidityChart";
@@ -15,6 +16,7 @@ import AccountProfileView from "../actions/AccountProfileView";
 import KanbanArchiveView from "../actions/KanbanArchiveView";
 import { HorizonStrategyView } from "../strategy/HorizonStrategyView";
 import { PerformanceDashboard } from "../performance/components/PerformanceDashboard";
+import { SettingsDashboard } from "../settings/components/SettingsDashboard";
 /* ═══════════════════════════════════════════════════════════
    B2B Dashboard View (Ana Kokpit & Actions Layout)
    ═══════════════════════════════════════════════════════════ */
@@ -24,6 +26,7 @@ export default function B2BDashboardView() {
   return (
     <div className="flex h-screen bg-zinc-950 overflow-hidden">
       <Sidebar />
+      <ToastContainer />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10 custom-scrollbar">
         {/* ── Max-width container ── */}
         <div className="mx-auto max-w-[1600px] w-full h-full flex flex-col">
@@ -55,6 +58,8 @@ export default function B2BDashboardView() {
             </div>
           ) : currentView === "performance" ? (
             <PerformanceDashboard />
+          ) : currentView === "settings" ? (
+            <SettingsDashboard />
           ) : (
             /* ═══════════════════════════════════════
                Dashboard Görünümü

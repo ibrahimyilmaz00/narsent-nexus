@@ -508,7 +508,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
 
                                   <div className="flex flex-col">
                                     <span className="text-[10px] font-bold text-blue-400 mb-0.5">{step.day}</span>
-                                    <span className={`text-xs sm:text-sm font-medium ${isChecked ? 'text-zinc-200' : 'text-zinc-500 line-through'}`}>
+                                    <span className={`text-xs sm:text-sm font-medium ${isChecked ? 'text-zinc-200' : 'text-zinc-400'}`}>
                                       {step.title}
                                     </span>
                                   </div>

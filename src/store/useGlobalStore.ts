@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type SegmentMode = 'genel' | 'b2b' | 'b2c';
-type ViewMode = 'dashboard' | 'actions' | 'account-profile' | 'kanban-archive' | 'horizon_strategy' | 'performance';
+type ViewMode = 'dashboard' | 'actions' | 'account-profile' | 'kanban-archive' | 'horizon_strategy' | 'performance' | 'settings';
 
 export interface WidgetData {
   id: string;

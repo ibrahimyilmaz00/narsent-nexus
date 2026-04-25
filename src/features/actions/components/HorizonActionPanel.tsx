@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Lightbulb, Activity, CheckCircle2, Circle, Clock, ShieldAlert, MessageSquare, Mail, Kanban } from "lucide-react";
 import { useGlobalStore } from "../../../store/useGlobalStore";
+import OmnichannelActionModal from "./OmnichannelActionModal";
 
 export default function HorizonActionPanel() {
   const openActionModal = useGlobalStore((state) => state.openActionModal);
+  const [distributionModalOpen, setDistributionModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 w-full h-full">
@@ -23,7 +25,10 @@ export default function HorizonActionPanel() {
         <p className="text-zinc-300 text-sm font-medium leading-relaxed">
           Hesap yöneticisini BUGÜN ara; 668 günlük gecikme ve 18.6M TL açık pozisyon gerekçesiyle acil görüşme talep et ve 3 taksitli yapılandırma (0 faiz, 30-60-90 gün) teklifini sun.
         </p>
-        <button className="mt-4 w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/20 active:scale-[0.98] flex items-center justify-center gap-2">
+        <button
+          onClick={() => setDistributionModalOpen(true)}
+          className="mt-4 w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/20 active:scale-[0.98] flex items-center justify-center gap-2"
+        >
           🚀 Aksiyonu Başlat (ERP'ye İlet)
         </button>
       </div>
@@ -67,7 +72,7 @@ export default function HorizonActionPanel() {
               <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
               <span className="text-sm font-semibold text-zinc-200">Görüşme Talep Et <span className="text-zinc-500 font-normal">(Bugün)</span></span>
             </div>
-            <button 
+            <button
               onClick={() => openActionModal('step_1')}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
@@ -81,7 +86,7 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Yapılandırma Teklifi Sun <span className="text-zinc-600 font-normal">(48 Saat İçinde)</span></span>
             </div>
-            <button 
+            <button
               onClick={() => openActionModal('step_2')}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
@@ -95,7 +100,7 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Taahhüt Yoksa Limiti Düşür <span className="text-zinc-600 font-normal">(7. Gün)</span></span>
             </div>
-            <button 
+            <button
               onClick={() => openActionModal('step_3')}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
@@ -109,7 +114,7 @@ export default function HorizonActionPanel() {
               <Circle size={18} className="text-zinc-600 shrink-0" />
               <span className="text-sm font-medium text-zinc-400">Yanıt Alınamazsa Hukuki Takip <span className="text-zinc-600 font-normal">(21. Gün)</span></span>
             </div>
-            <button 
+            <button
               onClick={() => openActionModal('step_4')}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700/50 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
@@ -153,6 +158,17 @@ export default function HorizonActionPanel() {
 
         </div>
       </div>
+
+      {distributionModalOpen && (
+        <OmnichannelActionModal
+          isOpen={true}
+          onClose={() => setDistributionModalOpen(false)}
+          accountId="0095"
+          accountName="Demirören Yapı A.Ş."
+          exposure="18.666.794 TL"
+          aiInstruction="Hesap yöneticisini BUGÜN ara; 668 günlük gecikme ve 18.6M TL açık pozisyon gerekçesiyle acil görüşme talep et ve 3 taksitli yapılandırma (0 faiz, 30-60-90 gün) teklifini sun."
+        />
+      )}
 
     </div>
   );

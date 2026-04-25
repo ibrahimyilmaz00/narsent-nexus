@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Filter, ArrowRight } from "lucide-react";
 import ActionDrawer, { ActionItemData } from "./ActionDrawer";
+import { useGlobalStore } from "../../../store/useGlobalStore";
 
 /* ═══════════════════════════════════════════════════════════
    Mock Data
@@ -91,6 +92,9 @@ export default function ActionTable() {
   const [selectedAction, setSelectedAction] = useState<ActionItemData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  const setCurrentView = useGlobalStore((state) => state.setCurrentView);
+  const setSelectedAccountId = useGlobalStore((state) => state.setSelectedAccountId);
+
   const handleOpenDrawer = (action: ActionItemData) => {
     setSelectedAction(action);
     setIsDrawerOpen(true);
@@ -99,6 +103,11 @@ export default function ActionTable() {
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
     setTimeout(() => setSelectedAction(null), 300); // Clear data after animation
+  };
+
+  const handleRowClick = (action: ActionItemData) => {
+    setSelectedAccountId(action.id);
+    setCurrentView("account-profile");
   };
 
   return (
@@ -110,21 +119,19 @@ export default function ActionTable() {
           <div className="flex items-center bg-zinc-950/50 p-1 rounded-lg border border-zinc-800/50">
             <button
               onClick={() => setActiveTab("risks")}
-              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
-                activeTab === "risks"
+              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${activeTab === "risks"
                   ? "bg-zinc-800/80 text-zinc-50 shadow-sm"
                   : "text-zinc-500 hover:text-zinc-300"
-              }`}
+                }`}
             >
               Kritik Riskler (Söndürülecek Yangınlar)
             </button>
             <button
               onClick={() => setActiveTab("opportunities")}
-              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
-                activeTab === "opportunities"
+              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${activeTab === "opportunities"
                   ? "bg-zinc-800/80 text-zinc-50 shadow-sm"
                   : "text-zinc-500 hover:text-zinc-300"
-              }`}
+                }`}
             >
               Stratejik Fırsatlar
             </button>
@@ -160,7 +167,8 @@ export default function ActionTable() {
               {mockActions.map((action) => (
                 <tr
                   key={action.id}
-                  className="group hover:bg-zinc-800/30 transition-colors cursor-default"
+                  onClick={() => handleRowClick(action)}
+                  className="group hover:bg-zinc-800/40 transition-colors cursor-pointer"
                 >
                   <td className="px-5 py-4">
                     <span className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
@@ -187,7 +195,10 @@ export default function ActionTable() {
                   </td>
                   <td className="px-5 py-4 text-right">
                     <button
-                      onClick={() => handleOpenDrawer(action)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenDrawer(action);
+                      }}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 border border-transparent hover:border-blue-500/20 transition-all opacity-0 group-hover:opacity-100"
                     >
                       İncele

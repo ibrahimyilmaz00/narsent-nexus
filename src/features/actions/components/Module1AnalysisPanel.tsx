@@ -79,7 +79,7 @@ export default function Module1AnalysisPanel() {
 
   return (
     <div className="flex flex-col gap-6 w-full h-full">
-      
+
       {/* ═══════════════════════════════════════
          BLOK A: Ödeme Olasılık Dağılımı
          ═══════════════════════════════════════ */}
@@ -90,22 +90,22 @@ export default function Module1AnalysisPanel() {
             Modül 1: Ödeme Olasılık Dağılımı (AI Tahmini)
           </h3>
         </div>
-        
+
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={probabilityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" opacity={0.5} />
-              <XAxis 
-                dataKey="name" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: "#71717a", fontSize: 11 }} 
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#71717a", fontSize: 11 }}
                 dy={10}
               />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: "#71717a", fontSize: 11 }} 
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#71717a", fontSize: 11 }}
                 tickFormatter={(value) => `%${value}`}
               />
               <Tooltip cursor={{ fill: "#27272a", opacity: 0.4 }} content={<CustomTooltip />} />

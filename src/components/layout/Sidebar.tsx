@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Briefcase,
@@ -16,18 +17,33 @@ import { useGlobalStore } from "../../store/useGlobalStore";
 
 export default function Sidebar() {
   const [isDecisionEngineOpen, setIsDecisionEngineOpen] = useState(false);
-  
+
+  const router = useRouter();
+  const pathname = usePathname();
+
   const setCurrentView = useGlobalStore((state) => state.setCurrentView);
+  const setSegmentMode = useGlobalStore((state) => state.setSegmentMode);
   const currentView = useGlobalStore((state) => state.currentView);
+
+  /* Navigate: keep Zustand + URL in sync */
+  function navigate(view: Parameters<typeof setCurrentView>[0], href: string) {
+    setCurrentView(view);
+    router.push(href);
+  }
+
+  /* Logout: reset to onboarding */
+  function handleLogout() {
+    setSegmentMode("genel");
+    setCurrentView("dashboard");
+    router.push("/");
+  }
 
   return (
     <aside className="w-20 hover:w-64 transition-all duration-300 ease-in-out group z-50 absolute sm:relative h-full flex flex-col bg-zinc-950 border-r border-zinc-800/50 shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
       {/* Logo Section */}
       <div className="h-20 flex items-center px-6 border-b border-zinc-800/50 shrink-0 overflow-hidden">
         <div className="flex items-center gap-3">
-          <div className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-            <Hexagon size={18} className="text-white fill-white/20" strokeWidth={2} />
-          </div>
+          <img src="/logo.png" alt="Narsent Logo" className="w-8 h-auto object-contain shrink-0" />
           <span className="text-lg font-bold tracking-tight text-zinc-50 opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity whitespace-nowrap">
             Narsent Nexus
           </span>
@@ -44,12 +60,11 @@ export default function Sidebar() {
 
         {/* Makro Kokpit */}
         <button
-          onClick={() => setCurrentView('dashboard')}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-            currentView === 'dashboard'
+          onClick={() => navigate("dashboard", "/")}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${currentView === "dashboard"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-center min-w-[20px]">
             <LayoutDashboard size={18} strokeWidth={2} />
@@ -63,11 +78,10 @@ export default function Sidebar() {
         <div className="space-y-1">
           <button
             onClick={() => setIsDecisionEngineOpen(!isDecisionEngineOpen)}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-              currentView === 'actions'
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${currentView === "actions" || currentView === "kanban-archive"
                 ? "bg-zinc-800/60 text-zinc-200 border-zinc-700/50"
                 : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center min-w-[20px]">
@@ -79,32 +93,28 @@ export default function Sidebar() {
             </div>
             <ChevronDown
               size={16}
-              className={`opacity-0 group-hover:opacity-100 hidden group-hover:block transition-all duration-300 ${
-                isDecisionEngineOpen ? "rotate-180 text-zinc-300" : "text-zinc-500"
-              }`}
+              className={`opacity-0 group-hover:opacity-100 hidden group-hover:block transition-all duration-300 ${isDecisionEngineOpen ? "rotate-180 text-zinc-300" : "text-zinc-500"
+                }`}
             />
           </button>
 
           {/* Expanded Sub-items */}
           <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isDecisionEngineOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
-            }`}
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${isDecisionEngineOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
+              }`}
           >
             <div className="pl-[52px] pr-3 py-2 opacity-0 group-hover:opacity-100 hidden group-hover:flex flex-col gap-1.5 transition-opacity whitespace-nowrap">
-              <button 
-                onClick={() => setCurrentView('actions')}
-                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${
-                  currentView === 'actions' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
-                }`}
+              <button
+                onClick={() => navigate("actions", "/actions")}
+                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${currentView === "actions" ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
+                  }`}
               >
                 Gelecek Aksiyonlar
               </button>
-              <button 
-                onClick={() => setCurrentView('kanban-archive')}
-                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${
-                  currentView === 'kanban-archive' ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
-                }`}
+              <button
+                onClick={() => navigate("kanban-archive", "/kanban")}
+                className={`w-full text-left text-xs font-medium py-1.5 transition-colors ${currentView === "kanban-archive" ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
+                  }`}
               >
                 Kanban İcra Arşivi
               </button>
@@ -114,12 +124,11 @@ export default function Sidebar() {
 
         {/* Horizon Strategy */}
         <button
-          onClick={() => setCurrentView('horizon_strategy')}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-            currentView === 'horizon_strategy'
+          onClick={() => navigate("horizon_strategy", "/strategy")}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${currentView === "horizon_strategy"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-center min-w-[20px]">
             <Target size={18} strokeWidth={2} />
@@ -130,26 +139,31 @@ export default function Sidebar() {
         </button>
 
         {/* Performans ve Analitik */}
-        <button 
-          onClick={() => setCurrentView('performance')}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${
-            currentView === 'performance'
+        <button
+          onClick={() => navigate("performance", "/performance")}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${currentView === "performance"
               ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
               : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-center min-w-[20px]">
             <LineChart size={18} strokeWidth={2} />
           </div>
           <span className="text-sm opacity-0 group-hover:opacity-100 hidden group-hover:block transition-opacity">
-            Performans & Analitik
+            Performans &amp; Analitik
           </span>
         </button>
       </div>
 
       {/* Footer Settings & Logout */}
       <div className="p-4 border-t border-zinc-800/50 space-y-1.5 shrink-0 overflow-hidden">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 font-medium transition-all duration-200 whitespace-nowrap">
+        <button
+          onClick={() => navigate("settings", "/settings")}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 border whitespace-nowrap ${currentView === "settings"
+              ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+              : "bg-transparent text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border-transparent"
+            }`}
+        >
           <div className="flex items-center justify-center min-w-[20px]">
             <Settings size={18} strokeWidth={2} />
           </div>
@@ -157,7 +171,11 @@ export default function Sidebar() {
             Ayarlar
           </span>
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-red-500/80 hover:bg-red-500/10 hover:text-red-400 font-medium transition-all duration-200 whitespace-nowrap">
+
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-transparent text-red-500/80 hover:bg-red-500/10 hover:text-red-400 font-medium transition-all duration-200 whitespace-nowrap"
+        >
           <div className="flex items-center justify-center min-w-[20px]">
             <LogOut size={18} strokeWidth={2} />
           </div>

@@ -167,22 +167,7 @@ export default function ActionDrawer({ isOpen, onClose, data }: ActionDrawerProp
             Bu kararı ertelemenin bedeli: {data.costOfInaction}
           </div>
 
-          {/* UX Buttons */}
-          <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold transition-colors">
-              <CheckCircle2 size={18} />
-              Onayla ve İlet
-            </button>
-            <button className="py-3 px-4 rounded-xl bg-transparent border border-zinc-700 hover:bg-zinc-800 text-zinc-300 font-semibold transition-colors">
-              Revize Et
-            </button>
-            <button className="py-3 px-4 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 border border-transparent text-orange-400 font-semibold transition-colors">
-              Ertele
-            </button>
-            <button className="py-3 px-4 rounded-xl bg-transparent hover:bg-red-500/10 border border-transparent text-red-500 font-semibold transition-colors">
-              Reddet
-            </button>
-          </div>
+
         </div>
 
       </div>
