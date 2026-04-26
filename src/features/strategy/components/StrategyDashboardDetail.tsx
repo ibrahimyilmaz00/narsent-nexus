@@ -43,7 +43,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
           </div>
           <div className="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 px-4 py-2 rounded-xl">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-xs text-zinc-400 font-medium">Pipeline ID: <span className="text-zinc-200">{reportId}</span></span>
+            <span className="text-xs text-zinc-400 font-medium">İşlem Kodu: <span className="text-zinc-200">{reportId}</span></span>
           </div>
         </div>
 
@@ -313,7 +313,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="p-2 bg-blue-500/10 rounded-lg"><Zap size={16} className="text-blue-400" /></div>
-                  <h4 className="text-sm font-bold text-zinc-200">AI Tetikleyici (Trigger)</h4>
+                  <h4 className="text-sm font-bold text-zinc-200">AI Tetikleyici Koşul</h4>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center border-b border-zinc-800/50 pb-2">
@@ -321,11 +321,11 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                     <span className="text-xs font-bold text-blue-400">{dashboardData.pipelineDetails.triggerLog}</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-zinc-800/50 pb-2">
-                    <span className="text-xs text-zinc-500 font-medium">Güven Skoru (Confidence)</span>
+                    <span className="text-xs text-zinc-500 font-medium">AI Güven Skoru</span>
                     <span className="text-xs font-bold text-zinc-300">{dashboardData.pipelineDetails.confidence}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-zinc-500 font-medium">Aciliyet (Urgency)</span>
+                    <span className="text-xs text-zinc-500 font-medium">Aciliyet Durumu</span>
                     <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase">{dashboardData.pipelineDetails.urgency}</span>
                   </div>
                 </div>
@@ -423,7 +423,7 @@ export const StrategyDashboardDetail = ({ reportId, onBack }: Props) => {
                           account.tier === 2 ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' :
                             'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                         }`}>
-                        <span className="text-[9px] font-bold uppercase opacity-80">Tier</span>
+                        <span className="text-[9px] font-bold uppercase opacity-80">Kademe</span>
                         <span className="text-base font-black leading-none">{account.tier}</span>
                       </div>
 

@@ -22,10 +22,10 @@ export default function TopOffendersList() {
         <div>
           <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
             <AlertCircle size={14} className="text-orange-500" />
-            Top 5 Şüpheli Alacak
+            En Riskli 5 Alacak
           </h3>
           <p className="mt-1 text-[10px] text-zinc-500">
-            En yüksek AI risk skoruna sahip müşteriler
+            Yapay zeka risk skoru en yüksek hesaplar
           </p>
         </div>
       </div>

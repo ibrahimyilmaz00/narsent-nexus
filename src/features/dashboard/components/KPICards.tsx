@@ -154,7 +154,7 @@ export default function KPICards() {
       },
     },
     {
-      title: "Nakit Ömrü (Cash Runway)",
+      title: "Nakit Ömrü",
       value: "12 Gün",
       icon: <Hourglass size={18} strokeWidth={1.5} />,
       badge: {

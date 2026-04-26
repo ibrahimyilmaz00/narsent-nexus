@@ -99,7 +99,7 @@ export default function AccountProfileView() {
         {/* Kart 1 */}
         <div className="h-full flex flex-col gap-2 rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-sm hover:bg-zinc-900/60 transition-colors">
           <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-            Açık Pozisyon (Exposure)
+            Açık Pozisyon
           </span>
           <span className="text-2xl sm:text-3xl font-bold text-zinc-50 tracking-tight">
             18.666.794 TL
@@ -135,7 +135,7 @@ export default function AccountProfileView() {
             className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium rounded-lg transition-colors border border-red-500/20 mt-3 w-fit"
           >
             <GitBranch size={14} />
-            What-If Senaryosu
+            Alternatif Senaryo
           </button>
         </div>
 

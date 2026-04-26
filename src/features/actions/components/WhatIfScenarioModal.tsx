@@ -37,7 +37,7 @@ export default function WhatIfScenarioModal() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 shrink-0 border-b border-zinc-800/50 pb-4">
           <div>
-            <h2 className="text-2xl font-bold text-zinc-50 tracking-tight">Senaryo Motoru (What-If)</h2>
+            <h2 className="text-2xl font-bold text-zinc-50 tracking-tight">Senaryo Motoru (Simülasyon)</h2>
             <p className="text-sm font-medium text-zinc-500 mt-1">
               Demirören Yapı A.Ş. • 18.6M Açık Pozisyon
             </p>

@@ -66,7 +66,7 @@ export default function RiskMatrixHeatmap() {
       <div className="mb-4 flex items-start justify-between shrink-0">
         <div>
           <h3 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-            Risk Göç Matrisi (Roll-Rate)
+            Risk Geçiş Matrisi
           </h3>
           <p className="mt-1 text-xs text-zinc-500">
             Bugünkü alacakların gelecek ayki durum geçişi
