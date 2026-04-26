@@ -68,11 +68,12 @@ export function computeStep3(values: Record<string, string>): Step3Data {
   const edCiro = num(values, "edCiro", 8_000_000);
   const edOgrenciSayisi = num(values, "edOgrenciSayisi", 1200);
   const edPesinat = num(values, "edPesinat", 20);
-  const edDoluluk = num(values, "edDoluluk", 72);
+  const edTaksitSayisi = num(values, "edTaksitSayisi", 9);
+  const edB2cOran = num(values, "edB2cOran", 80);
 
   const kronikGecikme = clamp(Math.round(25 - edPesinat * 0.3), 5, 35);
   const dropoutRisk = clamp(
-    Math.round(edOgrenciSayisi * ((100 - edDoluluk) / 100) * 0.5),
+    Math.round(edOgrenciSayisi * (edTaksitSayisi / 12) * (edB2cOran / 100) * 0.1),
     5,
     Math.round(edOgrenciSayisi * 0.15),
   );

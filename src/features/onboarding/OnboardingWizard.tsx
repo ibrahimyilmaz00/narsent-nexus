@@ -26,6 +26,10 @@ export default function OnboardingWizard() {
   const [selectedERP, setSelectedERP] = useState<ERPOption>(null);
   const [selectedSector, setSelectedSector] = useState<SectorOption>(null);
 
+  const [email, setEmail] = useState("");
+  const [sirketAdi, setSirketAdi] = useState("");
+  const [rol, setRol] = useState("");
+
   /* Unified form values — field namespaces per sector */
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -53,7 +57,8 @@ export default function OnboardingWizard() {
   const canGoNext = (): boolean => {
     switch (step) {
       case 1:
-        return selectedERP !== null && selectedSector !== null;
+        return selectedERP !== null && selectedSector !== null &&
+          email.trim() !== "" && sirketAdi.trim() !== "" && rol.trim() !== "";
       case 2:
       case 3:
       case 4:
@@ -67,7 +72,7 @@ export default function OnboardingWizard() {
     if (!canGoNext() || step >= TOTAL_STEPS) return;
 
     if (step === 1 && selectedERP && selectedSector && !sessionId) {
-      const result = await createOnboardingSession(selectedERP, selectedSector);
+      const result = await createOnboardingSession(selectedERP, selectedSector, email, sirketAdi, rol);
       if ('error' in result) {
         console.error('Session oluşturulamadı:', result.error);
         return;
@@ -99,6 +104,12 @@ export default function OnboardingWizard() {
               onErp={setSelectedERP}
               sector={selectedSector}
               onSector={setSelectedSector}
+              email={email}
+              onEmail={setEmail}
+              sirketAdi={sirketAdi}
+              onSirketAdi={setSirketAdi}
+              rol={rol}
+              onRol={setRol}
             />
           )}
           {step === 2 && sectorModule && (

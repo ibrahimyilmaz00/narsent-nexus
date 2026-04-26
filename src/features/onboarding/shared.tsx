@@ -160,6 +160,43 @@ export function InputField({
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Text Input Field (metin girisi icin)
+   ═══════════════════════════════════════════════════════════ */
+export function TextInputField({
+  label,
+  icon,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+}: {
+  label: string;
+  icon: React.ReactNode;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  type?: "text" | "email";
+}) {
+  return (
+    <div className="rounded-xl border border-zinc-800 bg-white/[0.03] p-5 space-y-3">
+      <label className="flex items-center gap-2.5">
+        <span className="text-blue-400/80">{icon}</span>
+        <span className="text-sm font-medium text-zinc-200">{label}</span>
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-lg bg-white/[0.04] border border-zinc-700 px-4 py-3 text-zinc-50 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/40
+                   placeholder-zinc-500 transition-all duration-200"
+        placeholder={placeholder}
+      />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    Select Field (Dropdown)
    ═══════════════════════════════════════════════════════════ */
 export function SelectField({

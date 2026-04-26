@@ -54,12 +54,15 @@ function mapFormValuesToColumns(formValues: Record<string, string>): Record<stri
 
 export async function createOnboardingSession(
   erp: string,
-  sector: string
+  sector: string,
+  email: string,
+  sirket_adi: string,
+  rol: string,
 ): Promise<{ id: string } | { error: string }> {
   const supabase = createServerSupabaseClient()
   const { data, error } = await supabase
     .from('onboarding_sessions')
-    .insert({ erp, sector, status: 'draft', user_id: null })
+    .insert({ erp, sector, email, sirket_adi, rol, status: 'draft', user_id: null })
     .select('id')
     .single()
 

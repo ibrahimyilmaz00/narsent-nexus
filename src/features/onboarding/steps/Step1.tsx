@@ -11,9 +11,12 @@ import {
   Flame,
   Radio,
   GraduationCap,
+  Mail,
+  Briefcase,
+  User,
 } from "lucide-react";
 
-import { SelectionCard } from "../shared";
+import { SelectionCard, TextInputField, SectionHeader } from "../shared";
 import type { ERPOption, SectorOption } from "../types";
 
 export function Step1({
@@ -21,11 +24,23 @@ export function Step1({
   onErp,
   sector,
   onSector,
+  email,
+  onEmail,
+  sirketAdi,
+  onSirketAdi,
+  rol,
+  onRol,
 }: {
   erp: ERPOption;
   onErp: (v: ERPOption) => void;
   sector: SectorOption;
   onSector: (v: SectorOption) => void;
+  email: string;
+  onEmail: (v: string) => void;
+  sirketAdi: string;
+  onSirketAdi: (v: string) => void;
+  rol: string;
+  onRol: (v: string) => void;
 }) {
   const erpCards: {
     id: ERPOption;
@@ -33,11 +48,11 @@ export function Step1({
     desc: string;
     icon: React.ReactNode;
   }[] = [
-      { id: "sap", name: "SAP", desc: "ECC / S4HANA", icon: <Server size={22} strokeWidth={1.5} /> },
-      { id: "logo", name: "Logo", desc: "Tiger / Go / J-Guar", icon: <Database size={22} strokeWidth={1.5} /> },
-      { id: "mikro", name: "Mikro", desc: "Mikro Yazılım", icon: <Cpu size={22} strokeWidth={1.5} /> },
-      { id: "api", name: "Özel API", desc: "REST / GraphQL", icon: <Globe size={22} strokeWidth={1.5} /> },
-    ];
+    { id: "sap", name: "SAP", desc: "ECC / S4HANA", icon: <Server size={22} strokeWidth={1.5} /> },
+    { id: "logo", name: "Logo", desc: "Tiger / Go / J-Guar", icon: <Database size={22} strokeWidth={1.5} /> },
+    { id: "mikro", name: "Mikro", desc: "Mikro Yazılım", icon: <Cpu size={22} strokeWidth={1.5} /> },
+    { id: "api", name: "Özel API", desc: "REST / GraphQL", icon: <Globe size={22} strokeWidth={1.5} /> },
+  ];
 
   const sectorCards: {
     id: SectorOption;
@@ -46,12 +61,12 @@ export function Step1({
     icon: React.ReactNode;
     enabled: boolean;
   }[] = [
-      { id: "kobi", name: "KOBİ (Üretim & Ticaret)", desc: "Üretim, ticaret ve hizmet sektörü", icon: <Factory size={20} strokeWidth={1.5} />, enabled: true },
-      { id: "kurumsal", name: "Kurumsal (Enterprise & Holding)", desc: "Büyük ölçekli holding ve grup yapıları", icon: <Building2 size={20} strokeWidth={1.5} />, enabled: true },
-      { id: "enerji", name: "Enerji & Ağır Sanayi", desc: "Enerji dağıtım ve sanayi", icon: <Flame size={20} strokeWidth={1.5} />, enabled: true },
-      { id: "telekom", name: "Telekomünikasyon & Teknoloji", desc: "Telekom, veri merkezi ve dijital hizmetler", icon: <Radio size={20} strokeWidth={1.5} />, enabled: true },
-      { id: "egitim", name: "Eğitim & Hizmet", desc: "Eğitim kurumları, kurs ve danışmanlık", icon: <GraduationCap size={20} strokeWidth={1.5} />, enabled: true },
-    ];
+    { id: "kobi", name: "KOBİ (Üretim & Ticaret)", desc: "Üretim, ticaret ve hizmet sektörü", icon: <Factory size={20} strokeWidth={1.5} />, enabled: true },
+    { id: "kurumsal", name: "Kurumsal (Enterprise & Holding)", desc: "Büyük ölçekli holding ve grup yapıları", icon: <Building2 size={20} strokeWidth={1.5} />, enabled: true },
+    { id: "enerji", name: "Enerji & Ağır Sanayi", desc: "Enerji dağıtım ve sanayi", icon: <Flame size={20} strokeWidth={1.5} />, enabled: true },
+    { id: "telekom", name: "Telekomünikasyon & Teknoloji", desc: "Telekom, veri merkezi ve dijital hizmetler", icon: <Radio size={20} strokeWidth={1.5} />, enabled: true },
+    { id: "egitim", name: "Eğitim & Hizmet", desc: "Eğitim kurumları, kurs ve danışmanlık", icon: <GraduationCap size={20} strokeWidth={1.5} />, enabled: true },
+  ];
 
   return (
     <div className="space-y-10">
@@ -62,6 +77,36 @@ export function Step1({
         <p className="text-sm text-zinc-300 max-w-lg mx-auto leading-relaxed">
           Horizon karar motoru, ERP sisteminize bağlanarak sektörel adaptörünüzü devreye alacaktır.
         </p>
+      </div>
+
+      <div className="space-y-4">
+        <SectionHeader icon={<User size={13} strokeWidth={1.5} />} label="Firma Bilgileri" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextInputField
+            label="E-posta Adresi"
+            icon={<Mail size={16} strokeWidth={1.5} />}
+            value={email}
+            onChange={onEmail}
+            placeholder="ornek@sirket.com"
+            type="email"
+          />
+          <TextInputField
+            label="Şirket Adı"
+            icon={<Briefcase size={16} strokeWidth={1.5} />}
+            value={sirketAdi}
+            onChange={onSirketAdi}
+            placeholder="Şirket Adı A.Ş."
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextInputField
+            label="Rolünüz"
+            icon={<User size={16} strokeWidth={1.5} />}
+            value={rol}
+            onChange={onRol}
+            placeholder="CFO, Finans Müdürü, vb."
+          />
+        </div>
       </div>
 
       <div className="space-y-4">
