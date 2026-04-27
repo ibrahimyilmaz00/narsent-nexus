@@ -1,10 +1,15 @@
 "use client";
 
 import React from "react";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Info } from "lucide-react";
 
 import { sectorRegistry } from "../sectors";
 import type { SectorKey } from "../types";
+
+function isHalfFilled(fields: string[], values: Record<string, string>): boolean {
+  const filled = fields.filter((f) => values[f] !== undefined && values[f].trim() !== "").length;
+  return filled >= Math.ceil(fields.length / 2);
+}
 
 export function Step3({
   sector,
@@ -15,6 +20,7 @@ export function Step3({
 }) {
   const { title, subtitle, badge, findings } =
     sectorRegistry[sector].computeStep3(values);
+  const incomplete = !isHalfFilled(sectorRegistry[sector].step2Fields, values);
 
   return (
     <div className="space-y-8">
@@ -26,6 +32,15 @@ export function Step3({
           {subtitle}
         </p>
       </div>
+
+      {incomplete && (
+        <div className="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-950/20 px-4 py-3">
+          <Info size={15} className="shrink-0 text-amber-400" />
+          <p className="text-[13px] text-amber-300 leading-relaxed">
+            Daha doğru sonuçlar için önceki adımdaki soruları tamamlayınız.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-3">
         <div className="flex items-center gap-2 mb-2">
@@ -47,11 +62,11 @@ export function Step3({
                   {f.label}
                 </span>
                 <span className="text-lg font-bold text-red-400 tabular-nums">
-                  {f.value}
+                  {incomplete ? "—" : f.value}
                 </span>
               </div>
               <p className="text-[13px] text-red-300/70 leading-relaxed">
-                {f.detail}
+                {incomplete ? f.detail.replace(/\d+([.,]\d+)?/g, "—") : f.detail}
               </p>
             </div>
           </div>

@@ -35,5 +35,7 @@ export type SectorModule = {
   Step2: React.FC<SectorFormProps>;
   computeStep3: (values: Record<string, string>) => Step3Data;
   Step4: React.FC<SectorFormProps>;
-  Step5Dashboard: React.FC<{ values: Record<string, string> }>;
+  Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }>;
+  step2Fields: string[];
+  step4Fields: string[];
 };

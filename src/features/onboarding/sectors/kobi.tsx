@@ -30,6 +30,11 @@ import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
 import { num, fmtTL, clamp } from "./insightHelpers";
 
+/* ── Field lists ─────────────────────────────────────────────────── */
+
+export const step2Fields = ["ciro", "faturaSayisi", "musteriSayisi", "yeniMusteri", "vade", "pesinOran", "odemeAraci"];
+export const step4Fields = ["tedarikciSayisi", "alisGideri", "dpo", "opex", "krediOdeme", "stok", "stokDevir", "nakit", "olaganustuGider"];
+
 /* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
@@ -265,7 +270,7 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
 
 /* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+export const Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }> = ({ values, incomplete }) => {
   const opex = num(values, "opex", 850_000);
   const krediOdeme = num(values, "krediOdeme", 120_000);
   const nakit = num(values, "nakit", 600_000);
@@ -293,7 +298,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Gelecek Ay Maaş Ödemelerinde
           </p>
           <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(nakitAcigi)}
+            {incomplete ? "—" : fmtTL(nakitAcigi)}
           </p>
           <p className="text-sm text-red-300/80 leading-relaxed">
             Açık Riski Tespit Edildi
@@ -316,10 +321,10 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
         </div>
         <div className="flex-1 space-y-3">
           <p className="text-[15px] font-semibold text-blue-200 leading-relaxed">
-            DSO&apos;yu {dsoKisaltma} gün öne çekmek
+            DSO&apos;yu {incomplete ? "—" : `${dsoKisaltma}`} gün öne çekmek
           </p>
           <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-            %{aiIsabet} İsabet
+            {incomplete ? "—" : `%${aiIsabet} İsabet`}
           </p>
           <p className="text-sm text-blue-300/80 leading-relaxed">
             ile riski tahmin etmek

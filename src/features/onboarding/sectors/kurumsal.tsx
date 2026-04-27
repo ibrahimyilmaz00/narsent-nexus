@@ -28,6 +28,11 @@ import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
 import { num, fmtTL, clamp } from "./insightHelpers";
 
+/* ── Field lists ─────────────────────────────────────────────────── */
+
+export const step2Fields = ["entCiro", "entSube", "entBayi", "entRiskliBayi", "entDso", "entSektorelVade", "entTahsilatMix", "entIskonto"];
+export const step4Fields = ["entTedarikci", "entDpo", "entOpex", "entKrediOdeme", "entStok", "entStokDevir", "entNakit", "entKredi"];
+
 /* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
@@ -146,7 +151,7 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
 
 /* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+export const Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }> = ({ values, incomplete }) => {
   const entCiro = num(values, "entCiro", 500_000_000);
   const entNakit = num(values, "entNakit", 45_000_000);
   const entRiskliBayi = num(values, "entRiskliBayi", 12);
@@ -169,10 +174,10 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             </span>
           </div>
           <p className="text-[14px] font-semibold text-red-300 leading-relaxed">
-            {entSube} farklı banka hesabında toplam
+            {incomplete ? "—" : `${entSube}`} farklı banka hesabında toplam
           </p>
           <p className="text-2xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(atilNakit)}
+            {incomplete ? "—" : fmtTL(atilNakit)}
           </p>
           <p className="text-[13px] text-red-300/70 leading-relaxed">Atıl Nakit Tespit Edildi</p>
           <div className="flex items-center gap-1.5">
@@ -191,10 +196,10 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             </span>
           </div>
           <p className="text-[14px] font-semibold text-red-300 leading-relaxed">
-            Riskli bayilerde gözlemlenen %{entRiskliBayi} yavaşlama
+            Riskli bayilerde gözlemlenen %{incomplete ? "—" : entRiskliBayi} yavaşlama
           </p>
           <p className="text-2xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(bayiRisk)} Risk
+            {incomplete ? "—" : `${fmtTL(bayiRisk)} Risk`}
           </p>
           <div className="flex items-center gap-1.5">
             <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
@@ -217,7 +222,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Atıl nakdi yatırıma yönlendirmek ve DSO-DPO makasını daraltmak
           </p>
           <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-            %{verimlilikArtis} Artış
+            {incomplete ? "—" : `%${verimlilikArtis} Artış`}
           </p>
           <p className="text-sm text-blue-300/80 leading-relaxed">
             Özkaynak verimliliğinde hedeflenen iyileşme

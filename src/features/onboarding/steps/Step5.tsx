@@ -1,10 +1,15 @@
 "use client";
 
 import React from "react";
-import { Rocket, Sparkles } from "lucide-react";
+import { Rocket, Sparkles, Info } from "lucide-react";
 
 import { sectorRegistry } from "../sectors";
 import type { SectorKey } from "../types";
+
+function isHalfFilled(fields: string[], values: Record<string, string>): boolean {
+  const filled = fields.filter((f) => values[f] !== undefined && values[f].trim() !== "").length;
+  return filled >= Math.ceil(fields.length / 2);
+}
 
 export function Step5({
   sector,
@@ -16,6 +21,7 @@ export function Step5({
   onLaunch: () => void;
 }) {
   const Dashboard = sectorRegistry[sector].Step5Dashboard;
+  const incomplete = !isHalfFilled(sectorRegistry[sector].step4Fields, values);
 
   return (
     <div className="space-y-8">
@@ -28,7 +34,16 @@ export function Step5({
         </p>
       </div>
 
-      <Dashboard values={values} />
+      {incomplete && (
+        <div className="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-950/20 px-4 py-3">
+          <Info size={15} className="shrink-0 text-amber-400" />
+          <p className="text-[13px] text-amber-300 leading-relaxed">
+            Daha doğru sonuçlar için önceki adımlardaki soruları tamamlayınız.
+          </p>
+        </div>
+      )}
+
+      <Dashboard values={values} incomplete={incomplete} />
 
       <button
         onClick={onLaunch}

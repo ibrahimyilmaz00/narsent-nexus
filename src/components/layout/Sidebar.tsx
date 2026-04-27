@@ -9,7 +9,6 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  Hexagon,
   Target,
 } from "lucide-react";
 import { useGlobalStore } from "../../store/useGlobalStore";
@@ -45,8 +44,8 @@ export default function Sidebar() {
       {/* Logo Section */}
       <div className="h-20 flex items-center px-6 border-b border-zinc-800/50 shrink-0 overflow-hidden">
         <div className="flex items-center gap-3">
-          <div className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-            <Hexagon size={18} className="text-white fill-white/20" strokeWidth={2} />
+          <div className="flex shrink-0 items-center justify-center h-8 w-8">
+            <img src="/narsent-logo.png" alt="Narsent Logo" className="h-8 w-8 object-contain" />
           </div>
           <span className={`text-lg font-bold tracking-tight text-zinc-50 ${vis}`}>
             Narsent Nexus

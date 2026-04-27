@@ -26,6 +26,11 @@ import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
 import { num, fmtTL, clamp } from "./insightHelpers";
 
+/* ── Field lists ─────────────────────────────────────────────────── */
+
+export const step2Fields = ["enHizmetTuru", "enDagitimHacmi", "enAboneSayisi", "enOdemeVadesi", "enTeminatOran", "enTahsilatKanal", "enKayipKacak"];
+export const step4Fields = ["enTakasHacmi", "enBakimBedeli", "enHazirNakit", "enBlokeTeminat", "enFinansmanMaliyet", "enProtestoHacmi"];
+
 /* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
@@ -134,7 +139,7 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
 
 /* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+export const Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }> = ({ values, incomplete }) => {
   const enTakasHacmi = num(values, "enTakasHacmi", 85_000_000);
   const enHazirNakit = num(values, "enHazirNakit", 25_000_000);
   const enOdemeVadesi = num(values, "enOdemeVadesi", 30);
@@ -160,7 +165,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Tarihsel gecikme trendine göre ayın 15&apos;indeki
           </p>
           <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(nakitAcigi)}
+            {incomplete ? "—" : fmtTL(nakitAcigi)}
           </p>
           <p className="text-sm text-red-300/80 leading-relaxed">
             EPİAŞ ödemesinde nakit açığı riski tespit edildi
@@ -183,10 +188,10 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
         </div>
         <div className="flex-1 space-y-3">
           <p className="text-[15px] font-semibold text-blue-200 leading-relaxed">
-            Ticari abonelerin ödeme davranışlarını analiz edip nakit açığını {tahminGun} gün önceden tahmin etmek
+            Ticari abonelerin ödeme davranışlarını analiz edip nakit açığını {incomplete ? "—" : `${tahminGun}`} gün önceden tahmin etmek
           </p>
           <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-            %{aiIsabet} İsabet
+            {incomplete ? "—" : `%${aiIsabet} İsabet`}
           </p>
           <p className="text-sm text-blue-300/80 leading-relaxed">
             ve Teminat Yeterliliğini sağlamak

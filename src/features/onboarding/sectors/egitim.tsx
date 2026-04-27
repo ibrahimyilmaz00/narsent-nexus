@@ -24,6 +24,11 @@ import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
 import { num, fmtTL, clamp } from "./insightHelpers";
 
+/* ── Field lists ─────────────────────────────────────────────────── */
+
+export const step2Fields = ["edSubeSayisi", "edCiro", "edOgrenciSayisi", "edTaksitSayisi", "edPesinat", "edB2cOran", "edOdemeKanal"];
+export const step4Fields = ["edMaas", "edKira", "edPazarlama", "edMateryal", "edDoluluk", "edNakit"];
+
 /* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
@@ -141,7 +146,7 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
 
 /* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+export const Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }> = ({ values, incomplete }) => {
   const edMaas = num(values, "edMaas", 450_000);
   const edKira = num(values, "edKira", 120_000);
   const edNakit = num(values, "edNakit", 180_000);
@@ -166,7 +171,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Taksit gecikmeleri ve yazın düşen kayıtlar nedeniyle Temmuz ayında eğitmen maaşları için
           </p>
           <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(nakitAcigi)}
+            {incomplete ? "—" : fmtTL(nakitAcigi)}
           </p>
           <p className="text-sm text-red-300/80 leading-relaxed">
             nakit açığı riski tespit edildi
@@ -192,7 +197,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Hangi öğrencinin taksitini aksatacağını önceden tahmin edip tahsilatı hızlandırmak
           </p>
           <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-            %{aiIsabet} İsabet
+            {incomplete ? "—" : `%${aiIsabet} İsabet`}
           </p>
           <p className="text-sm text-blue-300/80 leading-relaxed">
             ile yaz dönemi nakit akışını güvenceye almak

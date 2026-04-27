@@ -25,6 +25,11 @@ import { InputField, SelectField, SectionHeader } from "../shared";
 import type { SectorFormProps, Step3Data } from "../types";
 import { num, fmtTL, clamp } from "./insightHelpers";
 
+/* ── Field lists ─────────────────────────────────────────────────── */
+
+export const step2Fields = ["tcMrr", "tcAboneSayisi", "tcCihazPay", "tcTaahhutSure", "tcTahsilatVade", "tcTahsilatKanal"];
+export const step4Fields = ["tcDonanim", "tcVeriMerkezi", "tcLisans", "tcPersonel", "tcInterconnect", "tcDpo", "tcCapex", "tcNakit"];
+
 /* ── Step 2 ─────────────────────────────────────────────────────── */
 
 export const Step2: React.FC<SectorFormProps> = ({ values, onChange }) => (
@@ -135,7 +140,7 @@ export const Step4: React.FC<SectorFormProps> = ({ values, onChange }) => (
 
 /* ── Step 5 — dynamic dashboard from Step 2+4 inputs ───────────── */
 
-export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ values }) => {
+export const Step5Dashboard: React.FC<{ values: Record<string, string>; incomplete?: boolean }> = ({ values, incomplete }) => {
   const tcMrr = num(values, "tcMrr", 12_000_000);
   const tcCihazPay = num(values, "tcCihazPay", 25);
   const tcTaahhutSure = num(values, "tcTaahhutSure", 24);
@@ -159,7 +164,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Ödeme davranışı bozulan kurumsal müşterilerin kaybedilmesi durumunda yıllık
           </p>
           <p className="text-3xl font-bold text-red-400 tabular-nums tracking-tight">
-            {fmtTL(churnKaybi)}
+            {incomplete ? "—" : fmtTL(churnKaybi)}
           </p>
           <p className="text-sm text-red-300/80 leading-relaxed">MRR kaybı yaşanacak</p>
         </div>
@@ -183,7 +188,7 @@ export const Step5Dashboard: React.FC<{ values: Record<string, string> }> = ({ v
             Tahsilat verilerindeki mikro gecikme sinyallerini yakalayarak müşteri kaybını (Churn) engellemek
           </p>
           <p className="text-3xl font-bold text-blue-400 tabular-nums tracking-tight">
-            %{engelleme} Engelleme
+            {incomplete ? "—" : `%${engelleme} Engelleme`}
           </p>
           <p className="text-sm text-blue-300/80 leading-relaxed">
             ve cihaz finansman riskini minimize etmek
