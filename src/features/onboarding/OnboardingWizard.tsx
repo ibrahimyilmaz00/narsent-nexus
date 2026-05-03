@@ -19,6 +19,7 @@ export default function OnboardingWizard() {
   const TOTAL_STEPS = 5;
   const [step, setStep] = useState(1);
   const setSegmentMode = useGlobalStore((state) => state.setSegmentMode);
+  const startTutorial = useGlobalStore((state) => state.startTutorial);
   const setDemoSector = useDemoStore((s) => s.setSelectedSector);
   const setDemoInputs = useDemoStore((s) => s.setUserInputs);
   const setDashboardData = useDemoStore((s) => s.setDashboardData);
@@ -50,6 +51,7 @@ export default function OnboardingWizard() {
       setDashboardData(data);
     }
     setSegmentMode("b2b");
+    startTutorial();
   };
 
   const sectorModule = selectedSector ? sectorRegistry[selectedSector] : null;
